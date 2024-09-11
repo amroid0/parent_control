@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "964846054313",
+    "project_id": "kid-control-3f126",
+    "storage_bucket": "kid-control-3f126.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964846054313:android:7c78f8e90504594bdff2b8",
+        "android_client_info": {
+          "package_name": "com.amroid.parent_control"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF32Yl02oLuahdQ39hpnKCsDNOuEb7A3E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
