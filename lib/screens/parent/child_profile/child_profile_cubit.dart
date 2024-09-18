@@ -44,16 +44,28 @@ class ChildTokenCubit extends Cubit<ChildTokenState> {
             .get();
 
         if (settingsSnapshot.exists) {
-          Map<String, dynamic> appData = settingsSnapshot['apps'];
+          Map<String, dynamic> appData = settingsSnapshot.data() as Map<String, dynamic>;
           List<App> apps = appData.entries.map((entry) {
             return App(
-              packageName: entry.key,
-              appName: entry.value['appName'],
-              isLocked: entry.value['isLocked'],
-              usage: entry.value['totalTimeInForeground'],
-              usageLimit: entry.value['usageLimit'],
+              packageName: entry.key ?? "",
+              appName: entry.value['appName'] ?? "",
+              isLocked: entry.value['locked'] ?? false,
+              usage: entry.value['usage'] ?? 0,
+              usageLimit: entry.value['usageLimit'] ?? 0,
+              currentTimeInMilli: entry.value['currentTimeInMilli'] ?? 0,
             );
           }).toList();
+
+          // Sort apps by usage (descending) and then by locked status (locked first)
+          apps.sort((a, b) {
+            if (a.isLocked && !b.isLocked) {
+              return -1;
+            } else if (!a.isLocked && b.isLocked) {
+              return 1;
+            } else {
+              return b.usage.compareTo(a.usage);
+            }
+          });
 
           emit(ChildTokenLoaded(apps));
         } else {
@@ -83,7 +95,7 @@ class ChildTokenCubit extends Cubit<ChildTokenState> {
             .collection('settings')
             .doc('apps')
             .update({
-          FieldPath(['apps', packageName, 'isLocked']): isLocked,
+          FieldPath([ packageName, 'locked']): isLocked,
         });
 
         // Fetch apps again to update the state
@@ -112,7 +124,8 @@ class ChildTokenCubit extends Cubit<ChildTokenState> {
             .collection('settings')
             .doc('apps')
             .update({
-          FieldPath(['apps', packageName, 'usageLimit']): usageLimit,
+          FieldPath([ packageName, 'usageLimit']): usageLimit,
+          FieldPath([ packageName, 'currentTimeInMilli']): DateTime.now().millisecondsSinceEpoch,
         });
 
         // Fetch apps again to update the state

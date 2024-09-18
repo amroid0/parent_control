@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'parent_login_cubit.dart';
 
 class LoginParentScreen extends StatelessWidget {
@@ -25,42 +26,97 @@ class LoginParentScreen extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(labelText: 'Email'),
-                  ),
-                  TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(labelText: 'Password'),
-                    obscureText: true,
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<ParentLoginCubit>().loginParent(
-                        _emailController.text,
-                        _passwordController.text,
-                      );
-                    },
-                    child: state is ParentLoginLoading
-                        ? CircularProgressIndicator()
-                        : Text('Login'),
-                  ),
-                  SizedBox(height: 20),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/registerParent');
-                    },
-                    child: Text('Register as Parent'),
-                  ),
-                ],
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(height: 20),
+                        Image.asset(
+                          'assets/logo.png', // Replace with your logo path
+                          height: 150,
+                        ),
+                        SizedBox(height: 40),
+                        _buildTextField(_emailController, 'Email'),
+                        SizedBox(height: 20),
+                        _buildTextField(_passwordController, 'Password', obscureText: true),
+                        SizedBox(height: 40),
+                        _buildLoginButton(context, state),
+                        SizedBox(height: 10),
+                        _buildRegisterLink(context),
+                      ],
+                    ),
+
+                  ],
+                ),
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label, {bool obscureText = false}) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey[200]!, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: label,
+            border: InputBorder.none,
+          ),
+          obscureText: obscureText,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginButton(BuildContext context, ParentLoginState state) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          context.read<ParentLoginCubit>().loginParent(
+            _emailController.text,
+            _passwordController.text,
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          padding: EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: state is ParentLoginLoading
+            ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+            : Text(
+          'Login',
+          style: TextStyle(fontSize: 18,color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegisterLink(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.pushNamed(context, '/registerParent');
+      },
+      child: Text(
+        'Sign Up',
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 16,
         ),
       ),
     );

@@ -1,76 +1,110 @@
 package com.amroid.parent_control
 
 import android.app.AppOpsManager
-import android.app.usage.UsageStats
-import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.AdaptiveIconDrawable
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.VectorDrawable
+import android.net.Uri
 import android.os.Build
-import android.os.Bundle
+import android.os.Process
 import android.provider.Settings
-import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import java.io.ByteArrayOutputStream
-import java.util.HashMap
-
 class MainActivity : FlutterActivity() {
   private val CHANNEL = "com.amroid.parent_control/app_usage"
+  private val REQUEST_CODE_USAGE_ACCESS = 123
+  private val REQUEST_CODE_SYSTEM_ALERT_WINDOW = 124
 
-  override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+  override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
 
     MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
-      if (call.method == "getAppUsageData") {
-        val appUsageData = getAppUsageData()
-        if (appUsageData != null) {
-          result.success(appUsageData)
-        } else {
-          result.error("UNAVAILABLE", "App usage data not available.", null)
+      when (call.method) {
+        "startAppUsageService" -> {
+          val childId = call.argument<String>("childId")
+          if (childId != null) {
+            if (hasUsageAccessPermission() && hasSystemAlertWindowPermission()) {
+              startAppUsageService(childId)
+              result.success(null)
+            } else {
+              if (!hasUsageAccessPermission()) {
+                requestUsageAccessPermission()
+              }
+              if (!hasSystemAlertWindowPermission()) {
+                requestSystemAlertWindowPermission()
+              }
+              result.success(null) // Permission request is asynchronous, so we return success here
+            }
+          } else {
+            result.error("INVALID_ARGUMENT", "Child ID is null", null)
+          }
         }
+        else -> result.notImplemented()
+      }
+    }
+  }
+
+  private fun hasUsageAccessPermission(): Boolean {
+    val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+    val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      appOps.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(), packageName)
+    } else {
+      appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(), packageName)
+    }
+    return mode == AppOpsManager.MODE_ALLOWED
+  }
+
+  private fun requestUsageAccessPermission() {
+    val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+    startActivityForResult(intent, REQUEST_CODE_USAGE_ACCESS)
+  }
+
+  private fun hasSystemAlertWindowPermission(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      Settings.canDrawOverlays(this)
+    } else {
+      true
+    }
+  }
+
+  private fun requestSystemAlertWindowPermission() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+      startActivityForResult(intent, REQUEST_CODE_SYSTEM_ALERT_WINDOW)
+    }
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (requestCode == REQUEST_CODE_USAGE_ACCESS) {
+      if (hasUsageAccessPermission()) {
+        // Permission granted, start the service
+        val childId = intent.getStringExtra("childId") ?: ""
+        startAppUsageService(childId)
       } else {
-        result.notImplemented()
+        // Permission not granted
+        // Handle the case where the user did not grant permission
+      }
+    } else if (requestCode == REQUEST_CODE_SYSTEM_ALERT_WINDOW) {
+      if (hasSystemAlertWindowPermission()) {
+        // Permission granted, start the service
+        val childId = intent.getStringExtra("childId") ?: ""
+        startAppUsageService(childId)
+      } else {
+        // Permission not granted
+        // Handle the case where the user did not grant permission
       }
     }
   }
 
-  private fun getAppUsageData(): Map<String, Any>? {
-    val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-    val endTime = System.currentTimeMillis()
-    val startTime = endTime - 1000 * 60 * 60 * 24 // Last 24 hours
-    val usageStatsList = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, endTime)
-
-    val appUsageData = HashMap<String, Any>()
-    for (usageStats in usageStatsList) {
-      val appData = HashMap<String, Any>()
-      appData["packageName"] = usageStats.packageName as String
-      appData["totalTimeInForeground"] = usageStats.totalTimeInForeground / 60000
-      appUsageData[usageStats.packageName] = appData
+  private fun startAppUsageService(childId: String) {
+    val intent = Intent(this, AppUsageService::class.java).apply {
+      putExtra("childId", childId)
     }
-
-    return appUsageData
-  }
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    requestUsageStatsPermission(this)
-  }
-
-  private fun requestUsageStatsPermission(context: Context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-      val mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), context.packageName)
-      if (mode != AppOpsManager.MODE_ALLOWED) {
-        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-        context.startActivity(intent)
-      }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      startForegroundService(intent)
+    } else {
+      startService(intent)
     }
   }
 }

@@ -5,10 +5,9 @@ import 'child_profile_cubit.dart';
 
 class ChildTokenScreen extends StatelessWidget {
   final String token;
-
   final String name;
 
-  ChildTokenScreen({required this.token,required this.name});
+  ChildTokenScreen({required this.token, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,6 @@ class ChildTokenScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.grey[200],
-
                     ),
                     child: Column(
                       children: [
@@ -47,30 +45,77 @@ class ChildTokenScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
+                  // Title above the app list
+                  Align(
+
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        'App List',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   Expanded(
                     child: BlocBuilder<ChildTokenCubit, ChildTokenState>(
                       builder: (context, state) {
                         if (state is ChildTokenLoading) {
                           return Center(child: CircularProgressIndicator());
                         } else if (state is ChildTokenLoaded) {
-                          return ListView.builder(
+                          return ListView.separated(
                             itemCount: state.apps.length,
+                            separatorBuilder: (context, index) => Divider(
+                              color: Colors.grey[200],
+                              thickness: 1,
+                            ),
                             itemBuilder: (context, index) {
                               App app = state.apps[index];
                               return ListTile(
-                                title: Text(app.appName),
-                                subtitle: Text('Usage: ${app.usage} minutes / Limit: ${app.usageLimit} minutes'),
+                                title: Row(
+                                  children: [
+                                    Icon(Icons.android, color: Colors.green),
+                                    SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        app.appName,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildUsageLimitText('Usage', '${app.usage} minutes'),
+                                    _buildUsageLimitText('Limit', '${app.usageLimit} minutes'),
+                                  ],
+                                ),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
-                                      icon: Icon(Icons.lock),
+                                      icon: Icon(
+                                        app.isLocked ? Icons.lock : Icons.lock_open,
+                                        color: app.isLocked ? Colors.red : Colors.green,
+                                      ),
                                       onPressed: () {
                                         _showLockDialog(context, app);
                                       },
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.edit),
+                                      icon: Icon(
+                                        Icons.timelapse_rounded,
+                                        color: Colors.blue,
+                                      ),
                                       onPressed: () {
                                         _showEditDialog(context, app);
                                       },
@@ -94,6 +139,28 @@ class ChildTokenScreen extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildUsageLimitText(String label, String value) {
+    return Row(
+      children: [
+        Text(
+          '$label: ',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey[600],
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[800],
+          ),
+        ),
+      ],
     );
   }
 

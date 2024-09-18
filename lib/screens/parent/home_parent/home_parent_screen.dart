@@ -36,6 +36,8 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,
         currentIndex: _currentIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -54,6 +56,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
     );
   }
 }
+
 class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -64,7 +67,8 @@ class HomeTab extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, '/addChild');
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add,color: Colors.white,),
+        backgroundColor: Colors.orange,
       ),
       body: BlocProvider(
         create: (context) => ParentHomeCubit()..fetchChildren(parentId),
@@ -79,7 +83,7 @@ class HomeTab extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      'Childern:',
+                      'Children:',
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -89,9 +93,14 @@ class HomeTab extends StatelessWidget {
                       itemBuilder: (context, index) {
                         Child child = state.children[index];
                         return ListTile(
-                          leading: CircleAvatar(
+                          leading:  CircleAvatar(
                             radius: 25,
-                            backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                            backgroundColor: Colors.grey,
+                            child: Icon(
+                              Icons.child_care,
+                              color: Colors.white,
+                              size: 50,
+                            ),
                           ),
                           title: Text(child.name),
                           subtitle: Text(child.email),
@@ -127,6 +136,7 @@ class LocationsTab extends StatelessWidget {
     return Center(child: Text('Locations Tab'));
   }
 }
+
 class ProfileTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

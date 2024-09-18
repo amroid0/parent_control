@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class ChildLoginState {}
 
@@ -33,12 +34,24 @@ class ChildLoginCubit extends Cubit<ChildLoginState> {
 
       if (snapshot.docs.isNotEmpty) {
         String childId = snapshot.docs.first.id;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('childId', childId);
         emit(ChildLoginSuccess(childId));
       } else {
         emit(ChildLoginFailure('Invalid email or token'));
       }
     } catch (e) {
       emit(ChildLoginFailure(e.toString()));
+    }
+  }
+
+  Future<void> checkLoggedInChild() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? childId = prefs.getString('childId');
+    if (childId != null) {
+      emit(ChildLoginSuccess(childId));
+    } else {
+      emit(ChildLoginInitial());
     }
   }
 }

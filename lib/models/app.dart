@@ -1,15 +1,20 @@
+import 'dart:ffi';
+
 class App {
   final String packageName;
   final String appName;
   final bool isLocked;
   final int usage;
-  final int usageLimit; // Add this field
+  final int usageLimit;
+  final int currentTimeInMilli;
 
   App({
     required this.packageName,
     required this.appName,
     required this.isLocked,
     required this.usage,
-    required this.usageLimit, // Add this field
+    required this.usageLimit, // in minutes
+    required this.currentTimeInMilli
+// Add this field
   });
 }

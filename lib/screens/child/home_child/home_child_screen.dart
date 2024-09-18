@@ -11,28 +11,77 @@ class ChildHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChildHomeCubit(childId)..getAppUsageData(),
+      create: (context) => ChildHomeCubit(childId)..fetchApps()..startForegroundService(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Child Home'),
+          title: const Text('Child Home'),
         ),
         body: BlocBuilder<ChildHomeCubit, ChildHomeState>(
           builder: (context, state) {
             if (state is ChildHomeLoading) {
               return Center(child: CircularProgressIndicator());
             } else if (state is ChildHomeLoaded) {
-              return ListView.builder(
-                itemCount: state.apps.length,
-                itemBuilder: (context, index) {
-                  App app = state.apps[index];
-                  return ListTile(
-                    title: Text(app.appName),
-                    subtitle: Text('Usage: ${app.usage} minutes / Limit: ${app.usageLimit} minutes'),
-                    trailing: app.isLocked
-                        ? Icon(Icons.lock)
-                        : Icon(Icons.lock_open),
-                  );
-                },
+              return Column(
+                children: [
+
+                  SizedBox(height: 20),
+                  // Title above the app list
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        'App List',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: state.apps.length,
+                      separatorBuilder: (context, index) => Divider(
+                        color: Colors.grey[200],
+                        thickness: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        App app = state.apps[index];
+                        return ListTile(
+                          title: Row(
+                            children: [
+                              Icon(Icons.android, color: Colors.green),
+                              SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  app.appName,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildUsageLimitText('Usage', '${app.usage} minutes'),
+                              _buildUsageLimitText('Limit', '${app.usageLimit} minutes'),
+                            ],
+                          ),
+                          trailing: Icon(
+                            app.isLocked ? Icons.lock : Icons.lock_open,
+                            color: app.isLocked ? Colors.red : Colors.green,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               );
             } else if (state is ChildHomeError) {
               return Center(child: Text(state.error));
@@ -41,8 +90,29 @@ class ChildHomeScreen extends StatelessWidget {
             }
           },
         ),
-
       ),
+    );
+  }
+
+  Widget _buildUsageLimitText(String label, String value) {
+    return Row(
+      children: [
+        Text(
+          '$label: ',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey[600],
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[800],
+          ),
+        ),
+      ],
     );
   }
 }

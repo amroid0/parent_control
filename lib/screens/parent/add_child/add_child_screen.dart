@@ -25,34 +25,84 @@ class AddChildScreen extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(labelText: 'Child Name'),
-                  ),
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(labelText: 'Child Email'),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<AddChildCubit>().addChild(
-                        _nameController.text,
-                        _emailController.text,
-                      );
-                    },
-                    child: state is AddChildLoading
-                        ? CircularProgressIndicator()
-                        : Text('Add Child'),
-                  ),
-                ],
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(height: 20),
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.grey,
+                          child: Icon(
+                            Icons.child_care,
+                            color: Colors.white,
+                            size: 50,
+                          ),
+                        ),
+                        SizedBox(height: 40),
+                        _buildTextField(_nameController, 'Child Name'),
+                        SizedBox(height: 20),
+                        _buildTextField(_emailController, 'Child Email'),
+                      ],
+                    ),
+                    SizedBox(height: 40),
+                    _buildAddChildButton(context, state),
+                  ],
+                ),
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label, {bool obscureText = false}) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey[200]!, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: label,
+            border: InputBorder.none,
+          ),
+          obscureText: obscureText,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddChildButton(BuildContext context, AddChildState state) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          context.read<AddChildCubit>().addChild(
+            _nameController.text,
+            _emailController.text,
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          padding: EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: state is AddChildLoading
+            ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+            : Text(
+          'Add Child',
+          style: TextStyle(fontSize: 18,color: Colors.white),
         ),
       ),
     );
