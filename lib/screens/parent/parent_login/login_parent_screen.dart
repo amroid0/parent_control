@@ -18,7 +18,7 @@ class LoginParentScreen extends StatelessWidget {
         child: BlocConsumer<ParentLoginCubit, ParentLoginState>(
           listener: (context, state) {
             if (state is ParentLoginSuccess) {
-              Navigator.pushNamed(context, '/parentHome');
+              Navigator.pushReplacementNamed(context, '/parentHome');
             } else if (state is ParentLoginFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),

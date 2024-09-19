@@ -9,7 +9,7 @@
       tools:ignore="ProtectedPermissions" />
 
     <application
-        android:label="parent_control"
+        android:label="Kids Safe"
         android:name=".MyApplication"
         android:icon="@mipmap/ic_launcher">
         <activity

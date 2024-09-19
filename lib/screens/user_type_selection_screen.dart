@@ -16,9 +16,9 @@ class _UserTypeSelectionScreenState extends State<UserTypeSelectionScreen> {
 
   void _navigateToNextScreen() {
     if (_selectedUserType == 'Parent') {
-      Navigator.pushNamed(context, '/loginParent');
+      Navigator.pushReplacementNamed(context, '/loginParent');
     } else if (_selectedUserType == 'Child') {
-      Navigator.pushNamed(context, '/loginChild');
+      Navigator.pushReplacementNamed(context, '/loginChild');
     }
   }
 

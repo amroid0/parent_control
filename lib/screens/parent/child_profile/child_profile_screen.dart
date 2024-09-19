@@ -169,8 +169,8 @@ class ChildTokenScreen extends StatelessWidget {
       context: screenContext,
       builder: (context) {
         return AlertDialog(
-          title: Text('Lock App'),
-          content: Text('Do you want to lock this app?'),
+          title: Text(app.isLocked ? 'Unlock App' : 'Lock App'),
+          content: Text(app.isLocked ? 'Do you want to unlock this app?' : 'Do you want to lock this app?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -180,10 +180,10 @@ class ChildTokenScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                screenContext.read<ChildTokenCubit>().updateAppLock(app.packageName, true);
+                screenContext.read<ChildTokenCubit>().updateAppLock(app.packageName, !app.isLocked);
                 Navigator.of(context).pop();
               },
-              child: Text('Lock'),
+              child: Text(app.isLocked ? 'Unlock' : 'Lock'),
             ),
           ],
         );

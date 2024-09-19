@@ -7,7 +7,7 @@ data class App(
     val appName: String="",
     var isLocked: Boolean=false,
     var usage: Int= 0,
-    val usageLimit: Int=0,
+    val usageLimit: Long=0,
     var currentTimeInMilli: Long = 0
 ){
 

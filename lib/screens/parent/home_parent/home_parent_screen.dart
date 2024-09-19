@@ -31,6 +31,8 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
+        automaticallyImplyLeading: false, // Remove the back button
+
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

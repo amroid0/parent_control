@@ -19,7 +19,7 @@ class LoginChildScreen extends StatelessWidget {
         child: BlocConsumer<ChildLoginCubit, ChildLoginState>(
           listener: (context, state) {
             if (state is ChildLoginSuccess) {
-              Navigator.pushNamed(context, '/childMain', arguments: state.childId);
+              Navigator.pushReplacementNamed(context, '/childMain', arguments: state.childId);
             } else if (state is ChildLoginFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),

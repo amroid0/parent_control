@@ -7,6 +7,7 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.PixelFormat
 import android.os.Build
@@ -17,6 +18,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -24,16 +26,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
+import java.util.concurrent.ConcurrentHashMap
 
 class AppUsageService : Service() {
 
     private val CHANNEL_ID = "AppUsageServiceChannel"
     private val NOTIFICATION_ID = 1
-    private val appUsageMap = mutableMapOf<String, App>()
+    private val appUsageMap = ConcurrentHashMap<String, App>()
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private var overlayView: View? = null
-    private var childId :String = ""
+    private var childId: String = ""
+    private var firestoreListener: ListenerRegistration? = null
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -45,13 +48,14 @@ class AppUsageService : Service() {
         }
         createNotificationChannel()
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("App Usage Service")
+            .setContentTitle("Kids Safe")
             .setContentText("Monitoring app usage...")
-            .setSmallIcon(R.drawable.launch_background)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .build()
         startForeground(NOTIFICATION_ID, notification)
 
         startFetchingAppUsageInfo()
+        setupFirestoreListener()
         return START_STICKY
     }
 
@@ -59,6 +63,7 @@ class AppUsageService : Service() {
         super.onDestroy()
         coroutineScope.cancel()
         removeOverlay()
+        firestoreListener?.remove()
     }
 
     private fun createNotificationChannel() {
@@ -77,27 +82,30 @@ class AppUsageService : Service() {
         coroutineScope.launch {
             while (isActive) {
                 fetchAppUsageInfo()
-                delay(2 * 60 * 1000) // 2 minutes
+                delay(1 * 60 * 1000) // 1 minute
             }
         }
         coroutineScope.launch(Dispatchers.Main) {
             while (isActive) {
                 checkForegroundApps()
-                delay( 5000) // 2 minutes
+                delay(5000) // 5 seconds
             }
         }
     }
+
     private suspend fun fetchAppUsageInfo() {
         withContext(Dispatchers.IO) {
-            // Fetch the list of installed apps
+            // Fetch the list of installed apps, excluding system apps
             val packageManager = packageManager
             val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+                .filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
 
             // Fetch app package info and usage name
             val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
             val currentTime = System.currentTimeMillis()
             val startTime = currentTime - 24 * 60 * 60 * 1000 // 24 hours ago
             val usageStatsList = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, currentTime)
+
             // Fetch the list of apps from Firestore
             val firestore = FirebaseFirestore.getInstance()
             firestore.collection("children")
@@ -106,16 +114,16 @@ class AppUsageService : Service() {
                 .document("apps")
                 .get()
                 .addOnSuccessListener { documentSnapshot ->
-                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                    if (documentSnapshot.exists()) {
                         val appsMap = documentSnapshot.data?.mapValues { entry ->
                             val appData = entry.value as Map<String, Any>
                             App(
-                                packageName = appData["packageName"] as? String ?:"",
-                                appName = appData["appName"] as? String?:"",
-                                isLocked = appData["locked"] as? Boolean?:false,
-                                usage = appData["usage"] as? Int ?:0,
-                                usageLimit = appData["usageLimit"] as? Int ?:0,
-                                currentTimeInMilli = appData["currentTimeInMilli"] as? Long ?:0
+                                packageName = appData["packageName"] as? String ?: "",
+                                appName = appData["appName"] as? String ?: "",
+                                isLocked = appData["locked"] as? Boolean ?: false,
+                                usage = appData["usage"] as? Int ?: 0,
+                                usageLimit = appData["usageLimit"] as? Long ?: 0,
+                                currentTimeInMilli = appData["currentTimeInMilli"] as? Long ?: 0
                             )
                         } ?: mapOf()
 
@@ -132,15 +140,15 @@ class AppUsageService : Service() {
                                 if (remoteApp != null) {
                                     val usageLimitMillis = remoteApp.value.usageLimit * 60 * 1000
                                     val remainingTimeMillis = remoteApp.value.currentTimeInMilli + usageLimitMillis - currentTime
-                                    val isLocked = remoteApp.value.isLocked ||( usageLimitMillis != 0 && remainingTimeMillis <= 0)
+                                    val isLocked = remoteApp.value.isLocked || (usageLimitMillis != 0L && remainingTimeMillis <= 0)
 
                                     val updatedApp = App(
                                         packageName = packageName,
                                         appName = appName,
                                         isLocked = isLocked,
                                         usage = usage,
-                                        usageLimit = remoteApp.value.usageLimit,
-                                        currentTimeInMilli = remoteApp.value.currentTimeInMilli
+                                        usageLimit = if (isLocked) 0 else remoteApp.value.usageLimit,
+                                        currentTimeInMilli = if (isLocked) 0 else remoteApp.value.currentTimeInMilli
                                     )
                                     appUsageMap[packageName] = updatedApp
                                 } else {
@@ -155,8 +163,6 @@ class AppUsageService : Service() {
                                     )
                                     appUsageMap[packageName] = defaultApp
                                 }
-
-                                // Check running apps in foreground and show overlay if locked
                             }
                         }
 
@@ -169,7 +175,7 @@ class AppUsageService : Service() {
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("com.amroid", "Error fetching remote data", exception)
+                    Log.e("AppUsageService", "Error fetching remote data", exception)
                 }
         }
     }
@@ -183,6 +189,7 @@ class AppUsageService : Service() {
             packageName
         }
     }
+
     private fun checkForegroundApps() {
         val foregroundPackageName = getForegroundAppPackageName()
         val app = appUsageMap[foregroundPackageName]
@@ -194,7 +201,7 @@ class AppUsageService : Service() {
     }
 
     private fun getForegroundAppPackageName(): String {
-        var foregroundApp: String=""
+        var foregroundApp = ""
 
         val time = System.currentTimeMillis()
 
@@ -210,6 +217,7 @@ class AppUsageService : Service() {
 
         return foregroundApp
     }
+
     private fun showOverlay(packageName: String) {
         if (overlayView == null) {
             overlayView = LayoutInflater.from(this).inflate(R.layout.overlay_layout, null)
@@ -231,5 +239,39 @@ class AppUsageService : Service() {
             windowManager.removeView(overlayView)
             overlayView = null
         }
+    }
+
+    private fun setupFirestoreListener() {
+        val firestore = FirebaseFirestore.getInstance()
+        firestoreListener = firestore.collection("children")
+            .document(childId)
+            .collection("settings")
+            .document("apps")
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Log.e("AppUsageService", "Error listening to Firestore", exception)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    val appsMap = snapshot.data?.mapValues { entry ->
+                        val appData = entry.value as Map<String, Any>
+                        App(
+                            packageName = appData["packageName"] as? String ?: "",
+                            appName = appData["appName"] as? String ?: "",
+                            isLocked = appData["locked"] as? Boolean ?: false,
+                            usage = appData["usage"] as? Int ?: 0,
+                            usageLimit = appData["usageLimit"] as? Long ?: 0,
+                            currentTimeInMilli = appData["currentTimeInMilli"] as? Long ?: 0
+                        )
+                    } ?: mapOf()
+
+                    appUsageMap.clear()
+                    appUsageMap.putAll(appsMap)
+
+                    // Check the foreground app and update the overlay
+                    checkForegroundApps()
+                }
+            }
     }
 }

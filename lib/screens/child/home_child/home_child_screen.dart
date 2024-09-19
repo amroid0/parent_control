@@ -11,10 +11,11 @@ class ChildHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChildHomeCubit(childId)..fetchApps()..startForegroundService(),
+      create: (context) => ChildHomeCubit(childId)..startForegroundService()..fetchApps(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Child Home'),
+          automaticallyImplyLeading: false, // Remove the back button
         ),
         body: BlocBuilder<ChildHomeCubit, ChildHomeState>(
           builder: (context, state) {
