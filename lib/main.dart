@@ -20,10 +20,12 @@ void main() async {
   });
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,7 +39,8 @@ class MyApp extends StatelessWidget {
         '/loginChild': (context) => LoginChildScreen(),
         '/addChild': (context) => AddChildScreen(),
         '/parentHome': (context) => ParentHomeScreen(),
-        '/childMain': (context) => ChildHomeScreen(childId: ModalRoute.of(context)!.settings.arguments as String),
+        '/childMain': (context) => ChildHomeScreen(
+            childId: ModalRoute.of(context)!.settings.arguments as String),
         // Add other routes here
       },
     );
