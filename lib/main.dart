@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
         '/parentHome': (context) => ParentHomeScreen(),
         '/childMain': (context) => ChildHomeScreen(
             childId: ModalRoute.of(context)!.settings.arguments as String),
-        // Add other routes here
       },
     );
   }
