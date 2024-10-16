@@ -11,7 +11,9 @@ class ChildHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChildHomeCubit(childId)..startForegroundService()..fetchApps(),
+      create: (context) => ChildHomeCubit(childId)
+        ..startForegroundService()
+        ..fetchApps(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Child Home'),
@@ -20,17 +22,16 @@ class ChildHomeScreen extends StatelessWidget {
         body: BlocBuilder<ChildHomeCubit, ChildHomeState>(
           builder: (context, state) {
             if (state is ChildHomeLoading) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: const CircularProgressIndicator());
             } else if (state is ChildHomeLoaded) {
               return Column(
                 children: [
-
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Title above the app list
-                  Align(
+                  const Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
                         'App List',
                         style: TextStyle(
@@ -40,7 +41,7 @@ class ChildHomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Expanded(
                     child: ListView.separated(
                       itemCount: state.apps.length,
@@ -53,12 +54,12 @@ class ChildHomeScreen extends StatelessWidget {
                         return ListTile(
                           title: Row(
                             children: [
-                              Icon(Icons.android, color: Colors.green),
-                              SizedBox(width: 4),
+                              const Icon(Icons.android, color: Colors.green),
+                              const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   app.appName,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     overflow: TextOverflow.ellipsis,
@@ -70,8 +71,10 @@ class ChildHomeScreen extends StatelessWidget {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildUsageLimitText('Usage', '${app.usage} minutes'),
-                              _buildUsageLimitText('Limit', '${app.usageLimit} minutes'),
+                              _buildUsageLimitText(
+                                  'Usage', '${app.usage} minutes'),
+                              _buildUsageLimitText(
+                                  'Limit', '${app.usageLimit} minutes'),
                             ],
                           ),
                           trailing: Icon(
@@ -87,7 +90,7 @@ class ChildHomeScreen extends StatelessWidget {
             } else if (state is ChildHomeError) {
               return Center(child: Text(state.error));
             } else {
-              return Center(child: Text('Something went wrong'));
+              return const Center(child: Text('Something went wrong'));
             }
           },
         ),

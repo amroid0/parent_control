@@ -10,7 +10,7 @@ class AddChildScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Child'),
+        title: const Text('Add Child'),
       ),
       body: BlocProvider(
         create: (context) => AddChildCubit(),
@@ -33,8 +33,8 @@ class AddChildScreen extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        SizedBox(height: 20),
-                        CircleAvatar(
+                        const SizedBox(height: 20),
+                        const CircleAvatar(
                           radius: 50,
                           backgroundColor: Colors.grey,
                           child: Icon(
@@ -43,13 +43,13 @@ class AddChildScreen extends StatelessWidget {
                             size: 50,
                           ),
                         ),
-                        SizedBox(height: 40),
+                        const SizedBox(height: 40),
                         _buildTextField(_nameController, 'Child Name'),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         _buildTextField(_emailController, 'Child Email'),
                       ],
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     _buildAddChildButton(context, state),
                   ],
                 ),
@@ -93,14 +93,14 @@ class AddChildScreen extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ),
         child: state is AddChildLoading
-            ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
-            : Text(
+            ? const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+            : const Text(
           'Add Child',
           style: TextStyle(fontSize: 18,color: Colors.white),
         ),
@@ -116,15 +116,15 @@ class AddChildScreen extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
-          title: Text('Child Added'),
+          title: const Text('Child Added'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Child added with token:'),
-              SizedBox(height: 10),
+              const Text('Child added with token:'),
+              const SizedBox(height: 10),
               Text(
                 token,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -133,7 +133,7 @@ class AddChildScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );

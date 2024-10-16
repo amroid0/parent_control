@@ -5,6 +5,7 @@ import 'package:parent_control/screens/splash/splash_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'default_firebase_options.dart';
 import 'screens/child/child_login/login_child_screen.dart';
+import 'screens/child/geofencing-feature-child/view/check_geo_child.dart';
 import 'screens/parent/add_child/add_child_screen.dart';
 import 'screens/parent/home_parent/home_parent_screen.dart';
 import 'screens/parent/parent_login/login_parent_screen.dart';
@@ -29,16 +30,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      
       title: 'Kids Safe',
       initialRoute: '/splash',
       routes: {
-        '/splash': (context) => SplashScreen(),
-        '/': (context) => UserTypeSelectionScreen(),
+        // '/splash': (context) => SplashScreen(),
+        '/': (context) => const CheckGeoChild(),
+        // '/': (context) => UserTypeSelectionScreen(),
         '/registerParent': (context) => RegisterParentScreen(),
         '/loginParent': (context) => LoginParentScreen(),
         '/loginChild': (context) => LoginChildScreen(),
         '/addChild': (context) => AddChildScreen(),
-        '/parentHome': (context) => ParentHomeScreen(),
+        '/parentHome': (context) => const ParentHomeScreen(),
         '/childMain': (context) => ChildHomeScreen(
             childId: ModalRoute.of(context)!.settings.arguments as String),
       },

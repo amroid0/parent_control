@@ -7,6 +7,8 @@ import '../child_profile/child_profile_screen.dart';
 import 'home_parent_cubit.dart';
 
 class ParentHomeScreen extends StatefulWidget {
+  const ParentHomeScreen({super.key});
+
   @override
   _ParentHomeScreenState createState() => _ParentHomeScreenState();
 }
@@ -15,9 +17,9 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _children = [
-    HomeTab(),
-    LocationsTab(),
-    ProfileTab(),
+    const HomeTab(),
+    const LocationsTab(),
+    const ProfileTab(),
   ];
 
   void onTabTapped(int index) {
@@ -30,9 +32,8 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
         automaticallyImplyLeading: false, // Remove the back button
-
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -40,7 +41,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
         currentIndex: _currentIndex,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -60,6 +61,8 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
 }
 
 class HomeTab extends StatelessWidget {
+  const HomeTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     final String parentId = FirebaseAuth.instance.currentUser!.uid;
@@ -69,24 +72,28 @@ class HomeTab extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, '/addChild');
         },
-        child: Icon(Icons.add,color: Colors.white,),
         backgroundColor: Colors.orange,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       body: BlocProvider(
         create: (context) => ParentHomeCubit()..fetchChildren(parentId),
         child: BlocBuilder<ParentHomeCubit, ParentHomeState>(
           builder: (context, state) {
             if (state is ParentHomeLoading) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (state is ParentHomeLoaded) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
                     child: Text(
                       'Children:',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Expanded(
@@ -95,7 +102,7 @@ class HomeTab extends StatelessWidget {
                       itemBuilder: (context, index) {
                         Child child = state.children[index];
                         return ListTile(
-                          leading:  CircleAvatar(
+                          leading: const CircleAvatar(
                             radius: 25,
                             backgroundColor: Colors.grey,
                             child: Icon(
@@ -110,7 +117,8 @@ class HomeTab extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ChildTokenScreen(token: child.token, name: child.name),
+                                builder: (context) => ChildTokenScreen(
+                                    token: child.token, name: child.name),
                               ),
                             );
                           },
@@ -123,7 +131,7 @@ class HomeTab extends StatelessWidget {
             } else if (state is ParentHomeError) {
               return Center(child: Text(state.error));
             } else {
-              return Center(child: Text('Something went wrong'));
+              return const Center(child: Text('Something went wrong'));
             }
           },
         ),
@@ -133,41 +141,45 @@ class HomeTab extends StatelessWidget {
 }
 
 class LocationsTab extends StatelessWidget {
+  const LocationsTab({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Locations Tab'));
+    return const Center(child: Text('Locations Tab'));
   }
 }
 
 class ProfileTab extends StatelessWidget {
+  const ProfileTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       children: [
-        CircleAvatar(
+        const CircleAvatar(
           radius: 50,
           backgroundImage: NetworkImage('https://via.placeholder.com/150'),
         ),
-        SizedBox(height: 20),
-        Text(
+        const SizedBox(height: 20),
+        const Text(
           'User Name',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
         ListTile(
-          leading: Icon(Icons.settings),
-          title: Text('Settings'),
+          leading: const Icon(Icons.settings),
+          title: const Text('Settings'),
           onTap: () {
             // Navigate to settings
             Navigator.pushNamed(context, '/settings');
           },
         ),
-        Divider(),
+        const Divider(),
         ListTile(
-          leading: Icon(Icons.logout),
-          title: Text('Logout'),
+          leading: const Icon(Icons.logout),
+          title: const Text('Logout'),
           onTap: () {
             // Logout
             FirebaseAuth.instance.signOut();
