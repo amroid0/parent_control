@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:quickalert/quickalert.dart';
 import 'parent_login_cubit.dart';
 
 class LoginParentScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class LoginParentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login as Parent'),
+        title: const Text('Login as Parent'),
       ),
       body: BlocProvider(
         create: (context) => ParentLoginCubit(),
@@ -20,37 +21,42 @@ class LoginParentScreen extends StatelessWidget {
             if (state is ParentLoginSuccess) {
               Navigator.pushReplacementNamed(context, '/parentHome');
             } else if (state is ParentLoginFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.error,
+                title: 'Error',
+                text: state.error,
               );
             }
           },
           builder: (context, state) {
             return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        SizedBox(height: 20),
-                        Image.asset(
-                          'assets/logo.png', // Replace with your logo path
-                          height: 150,
-                        ),
-                        SizedBox(height: 40),
-                        _buildTextField(_emailController, 'Email'),
-                        SizedBox(height: 20),
-                        _buildTextField(_passwordController, 'Password', obscureText: true),
-                        SizedBox(height: 40),
-                        _buildLoginButton(context, state),
-                        SizedBox(height: 10),
-                        _buildRegisterLink(context),
-                      ],
-                    ),
-
-                  ],
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          Image.asset(
+                            'assets/logo.png', // Replace with your logo path
+                            height: 150,
+                          ),
+                          const SizedBox(height: 40),
+                          _buildTextField(_emailController, 'Email'),
+                          const SizedBox(height: 20),
+                          _buildTextField(_passwordController, 'Password',
+                              obscureText: true),
+                          const SizedBox(height: 40),
+                          _buildLoginButton(context, state),
+                          const SizedBox(height: 10),
+                          _buildRegisterLink(context),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -60,7 +66,8 @@ class LoginParentScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label, {bool obscureText = false}) {
+  Widget _buildTextField(TextEditingController controller, String label,
+      {bool obscureText = false}) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey[200]!, width: 2),
@@ -86,23 +93,24 @@ class LoginParentScreen extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           context.read<ParentLoginCubit>().loginParent(
-            _emailController.text,
-            _passwordController.text,
-          );
+                _emailController.text,
+                _passwordController.text,
+              );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ),
         child: state is ParentLoginLoading
-            ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
-            : Text(
-          'Login',
-          style: TextStyle(fontSize: 18,color: Colors.white),
-        ),
+            ? const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+            : const Text(
+                'Login',
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
       ),
     );
   }
@@ -112,7 +120,7 @@ class LoginParentScreen extends StatelessWidget {
       onPressed: () {
         Navigator.pushNamed(context, '/registerParent');
       },
-      child: Text(
+      child: const Text(
         'Sign Up',
         style: TextStyle(
           color: Colors.blue,
