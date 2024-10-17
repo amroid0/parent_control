@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../models/app.dart';
 import 'home_child_cubit.dart';
+import 'location_cubit.dart';
 
 class ChildHomeScreen extends StatelessWidget {
   final String childId;
@@ -10,8 +12,15 @@ class ChildHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChildHomeCubit(childId)..startForegroundService()..fetchApps(),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => ChildHomeCubit(childId)..startForegroundService()..fetchApps(),
+          ),
+          BlocProvider(
+            create: (context) => LocationCubit(childId)..startForegroundService(),
+          ),
+        ],
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Child Home'),
@@ -53,7 +62,22 @@ class ChildHomeScreen extends StatelessWidget {
                         return ListTile(
                           title: Row(
                             children: [
-                              Icon(Icons.android, color: Colors.green),
+                              CachedNetworkImage(
+                                imageUrl: app.iconUrl ?? "",
+                                height: 30,
+                                width: 30,
+                                placeholder: (context, url) => Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius:
+                                      BorderRadius.circular(15)),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(
+                                      Icons.android,
+                                      color: Colors.green,
+                                    ),
+                              ),
                               SizedBox(width: 4),
                               Expanded(
                                 child: Text(

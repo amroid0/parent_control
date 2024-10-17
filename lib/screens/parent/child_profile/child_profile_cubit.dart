@@ -155,6 +155,7 @@ class ChildTokenCubit extends Cubit<ChildTokenState> {
         usage: entry.value['usage'] ?? 0,
         usageLimit: entry.value['usageLimit'] ?? 0,
         currentTimeInMilli: entry.value['currentTimeInMilli'] ?? 0,
+        iconUrl: entry.value['iconUrl'] ?? "",
       );
     }).toList();
 

@@ -1,13 +1,17 @@
 package com.amroid.parent_control
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Process
 import android.provider.Settings
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -16,6 +20,7 @@ class MainActivity : FlutterActivity() {
   private val CHANNEL = "com.amroid.parent_control/app_usage"
   private val REQUEST_CODE_USAGE_ACCESS = 123
   private val REQUEST_CODE_SYSTEM_ALERT_WINDOW = 124
+  private val REQUEST_CODE_LOCATION_PERMISSION = 125
   private var childId: String? = ""
 
   override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -38,6 +43,8 @@ class MainActivity : FlutterActivity() {
       showUsageAccessPermissionDialog()
     } else if (!hasSystemAlertWindowPermission()) {
       showSystemAlertWindowPermissionDialog()
+    } else if (!hasLocationPermission()) {
+      showLocationPermissionDialog()
     } else {
       startAppUsageService(childId!!)
     }
@@ -101,6 +108,28 @@ class MainActivity : FlutterActivity() {
     }
   }
 
+  private fun hasLocationPermission(): Boolean {
+    return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+  }
+
+  private fun showLocationPermissionDialog() {
+    AlertDialog.Builder(this, R.style.CustomDialogTheme)
+      .setTitle("Location Permission")
+      .setMessage("This app needs location permission to track the user's location.")
+      .setPositiveButton("Grant") { _, _ ->
+        requestLocationPermission()
+      }
+      .setNegativeButton("Cancel") { dialog, _ ->
+        dialog.dismiss()
+        // Handle the case where the user did not grant permission
+      }
+      .show()
+  }
+
+  private fun requestLocationPermission() {
+    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE_LOCATION_PERMISSION)
+  }
+
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     when (requestCode) {
@@ -114,6 +143,20 @@ class MainActivity : FlutterActivity() {
       }
       REQUEST_CODE_SYSTEM_ALERT_WINDOW -> {
         if (hasSystemAlertWindowPermission()) {
+          requestPermissionsSequentially()
+        } else {
+          // Permission not granted
+          // Handle the case where the user did not grant permission
+        }
+      }
+    }
+  }
+
+  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    when (requestCode) {
+      REQUEST_CODE_LOCATION_PERMISSION -> {
+        if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
           requestPermissionsSequentially()
         } else {
           // Permission not granted
