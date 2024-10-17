@@ -100,11 +100,12 @@ class AddChildScreen extends StatelessWidget {
           ),
         ),
         child: state is AddChildLoading
-            ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+            ? CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
             : Text(
-          'Add Child',
-          style: TextStyle(fontSize: 18,color: Colors.white),
-        ),
+                'Add Child',
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
       ),
     );
   }
@@ -125,7 +126,8 @@ class AddChildScreen extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 token,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ],
           ),

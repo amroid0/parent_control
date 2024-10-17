@@ -81,7 +81,7 @@ class LocationTaskHandler extends TaskHandler {
 
 
   @override
-  Future<void> onStart(DateTime timestamp,) async {
+  Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? childId = prefs.getString('childId');
     _locationCubit = LocationCubit(childId!);
@@ -94,7 +94,7 @@ class LocationTaskHandler extends TaskHandler {
   }
 
   @override
-  void onDestroy(DateTime timestamp,) {
+  Future<void> onDestroy(DateTime timestamp,) async {
     _locationCubit?.close();
   }
 

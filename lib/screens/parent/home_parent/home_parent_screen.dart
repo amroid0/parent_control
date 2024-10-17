@@ -29,7 +29,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
 
   final List<Widget> _children = [
     const HomeTab(),
-    const LocationsTab(),
+     LocationsTab(),
     const ProfileTab(),
   ];
 
@@ -85,10 +85,7 @@ class HomeTab extends StatelessWidget {
         },
         child: Icon(Icons.add,color: Colors.white,),
         backgroundColor: Colors.orange,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
+       
       ),
       body: BlocProvider(
         create: (context) => ParentHomeCubit()..fetchChildren(parentId),
