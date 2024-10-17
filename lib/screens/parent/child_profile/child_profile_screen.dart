@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../models/app.dart';
@@ -34,12 +35,14 @@ class ChildTokenScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Child Token:',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 10),
                         Text(
                           token,
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -47,7 +50,6 @@ class ChildTokenScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   // Title above the app list
                   Align(
-
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -78,7 +80,22 @@ class ChildTokenScreen extends StatelessWidget {
                               return ListTile(
                                 title: Row(
                                   children: [
-                                    Icon(Icons.android, color: Colors.green),
+                                    CachedNetworkImage(
+                                      imageUrl: app.iconUrl ?? "",
+                                      height: 30,
+                                      width: 30,
+                                      placeholder: (context, url) => Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(
+                                        Icons.android,
+                                        color: Colors.green,
+                                      ),
+                                    ),
                                     SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
@@ -95,8 +112,10 @@ class ChildTokenScreen extends StatelessWidget {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildUsageLimitText('Usage', '${app.usage} minutes'),
-                                    _buildUsageLimitText('Limit', '${app.usageLimit} minutes'),
+                                    _buildUsageLimitText(
+                                        'Usage', '${app.usage} minutes'),
+                                    _buildUsageLimitText(
+                                        'Limit', '${app.usageLimit} minutes'),
                                   ],
                                 ),
                                 trailing: Row(
@@ -104,8 +123,12 @@ class ChildTokenScreen extends StatelessWidget {
                                   children: [
                                     IconButton(
                                       icon: Icon(
-                                        app.isLocked ? Icons.lock : Icons.lock_open,
-                                        color: app.isLocked ? Colors.red : Colors.green,
+                                        app.isLocked
+                                            ? Icons.lock
+                                            : Icons.lock_open,
+                                        color: app.isLocked
+                                            ? Colors.red
+                                            : Colors.green,
                                       ),
                                       onPressed: () {
                                         _showLockDialog(context, app);
@@ -170,7 +193,9 @@ class ChildTokenScreen extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           title: Text(app.isLocked ? 'Unlock App' : 'Lock App'),
-          content: Text(app.isLocked ? 'Do you want to unlock this app?' : 'Do you want to lock this app?'),
+          content: Text(app.isLocked
+              ? 'Do you want to unlock this app?'
+              : 'Do you want to lock this app?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -180,7 +205,9 @@ class ChildTokenScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                screenContext.read<ChildTokenCubit>().updateAppLock(app.packageName, !app.isLocked);
+                screenContext
+                    .read<ChildTokenCubit>()
+                    .updateAppLock(app.packageName, !app.isLocked);
                 Navigator.of(context).pop();
               },
               child: Text(app.isLocked ? 'Unlock' : 'Lock'),
@@ -192,7 +219,8 @@ class ChildTokenScreen extends StatelessWidget {
   }
 
   void _showEditDialog(BuildContext screenContext, App app) {
-    TextEditingController _timeLimitController = TextEditingController(text: app.usageLimit.toString());
+    TextEditingController _timeLimitController =
+        TextEditingController(text: app.usageLimit.toString());
 
     showDialog(
       context: screenContext,
@@ -215,7 +243,9 @@ class ChildTokenScreen extends StatelessWidget {
               onPressed: () {
                 int? newTimeLimit = int.tryParse(_timeLimitController.text);
                 if (newTimeLimit != null) {
-                  screenContext.read<ChildTokenCubit>().updateAppUsageLimit(app.packageName, newTimeLimit);
+                  screenContext
+                      .read<ChildTokenCubit>()
+                      .updateAppUsageLimit(app.packageName, newTimeLimit);
                 }
                 Navigator.of(context).pop();
               },

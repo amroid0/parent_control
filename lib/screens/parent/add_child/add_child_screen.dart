@@ -33,8 +33,8 @@ class AddChildScreen extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        const SizedBox(height: 20),
-                        const CircleAvatar(
+                        SizedBox(height: 20),
+                        CircleAvatar(
                           radius: 50,
                           backgroundColor: Colors.grey,
                           child: Icon(
@@ -43,7 +43,7 @@ class AddChildScreen extends StatelessWidget {
                             size: 50,
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: 40),
                         _buildTextField(_nameController, 'Child Name'),
                         const SizedBox(height: 20),
                         _buildTextField(_emailController, 'Child Email'),
@@ -61,7 +61,8 @@ class AddChildScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label, {bool obscureText = false}) {
+  Widget _buildTextField(TextEditingController controller, String label,
+      {bool obscureText = false}) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey[200]!, width: 2),
@@ -87,9 +88,9 @@ class AddChildScreen extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           context.read<AddChildCubit>().addChild(
-            _nameController.text,
-            _emailController.text,
-          );
+                _nameController.text,
+                _emailController.text,
+              );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
@@ -99,8 +100,8 @@ class AddChildScreen extends StatelessWidget {
           ),
         ),
         child: state is AddChildLoading
-            ? const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
-            : const Text(
+            ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+            : Text(
           'Add Child',
           style: TextStyle(fontSize: 18,color: Colors.white),
         ),

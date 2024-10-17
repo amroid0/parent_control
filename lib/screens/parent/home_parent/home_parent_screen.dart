@@ -1,11 +1,22 @@
+import 'dart:convert';
+import 'dart:ui';
+import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../models/child.dart';
 import '../child_profile/child_profile_screen.dart';
 import 'home_parent_cubit.dart';
-
+import 'location_child_cubit.dart';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 class ParentHomeScreen extends StatefulWidget {
   const ParentHomeScreen({super.key});
 
@@ -72,6 +83,7 @@ class HomeTab extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, '/addChild');
         },
+        child: Icon(Icons.add,color: Colors.white,),
         backgroundColor: Colors.orange,
         child: const Icon(
           Icons.add,
@@ -102,7 +114,7 @@ class HomeTab extends StatelessWidget {
                       itemBuilder: (context, index) {
                         Child child = state.children[index];
                         return ListTile(
-                          leading: const CircleAvatar(
+                          leading:  CircleAvatar(
                             radius: 25,
                             backgroundColor: Colors.grey,
                             child: Icon(
@@ -141,11 +153,9 @@ class HomeTab extends StatelessWidget {
 }
 
 class LocationsTab extends StatelessWidget {
-  const LocationsTab({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Locations Tab'));
+    return Center(child: Text('Locations Tab'));
   }
 }
 

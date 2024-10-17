@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:parent_control/screens/child/home_child/home_child_screen.dart';
 import 'package:parent_control/screens/splash/splash_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,6 +14,7 @@ import 'screens/parent/register/register_parent_screen.dart';
 import 'screens/user_type_selection_screen.dart';
 
 void main() async {
+  FlutterForegroundTask.initCommunicationPort();
   WidgetsFlutterBinding.ensureInitialized();
   await Permission.notification.isDenied.then((value) {
     if (value) {

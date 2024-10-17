@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../models/app.dart';
 import 'home_child_cubit.dart';
+import 'location_cubit.dart';
 
 class ChildHomeScreen extends StatelessWidget {
   final String childId;
@@ -11,9 +13,7 @@ class ChildHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChildHomeCubit(childId)
-        ..startForegroundService()
-        ..fetchApps(),
+      create: (context) => ChildHomeCubit(childId)..startForegroundService()..fetchApps(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Child Home'),
@@ -54,8 +54,8 @@ class ChildHomeScreen extends StatelessWidget {
                         return ListTile(
                           title: Row(
                             children: [
-                              const Icon(Icons.android, color: Colors.green),
-                              const SizedBox(width: 4),
+                              Icon(Icons.android, color: Colors.green),
+                              SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   app.appName,

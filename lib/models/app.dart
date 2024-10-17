@@ -7,6 +7,8 @@ class App {
   final int usage;
   final int usageLimit;
   final int currentTimeInMilli;
+  final String? iconUrl;
+
 
   App({
     required this.packageName,
@@ -14,7 +16,8 @@ class App {
     required this.isLocked,
     required this.usage,
     required this.usageLimit, // in minutes
-    required this.currentTimeInMilli
+    required this.currentTimeInMilli,
+    required this.iconUrl
 // Add this field
   });
 }
