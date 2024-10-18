@@ -16,7 +16,7 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/loginParent': (context) => LoginParentScreen(),
   '/loginChild': (context) => LoginChildScreen(),
   '/addChild': (context) => AddChildScreen(),
-  '/parentHome': (context) =>  ParentHomeScreen(),
+  '/parentHome': (context) => const ParentHomeScreen(),
   '/childMain': (context) => ChildHomeScreen(
       childId: ModalRoute.of(context)!.settings.arguments as String),
   '/checkGeoChild': (context) => const CheckGeoChild(),

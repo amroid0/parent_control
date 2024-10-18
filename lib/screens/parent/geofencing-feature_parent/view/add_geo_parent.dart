@@ -1,83 +1,151 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:parent_control/screens/parent/geofencing-feature_parent/cubit/geo_parent_cubit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class AddGeoParent extends StatefulWidget {
-  const AddGeoParent({Key? key}) : super(key: key);
+import 'alert_view.dart';
+import 'geo_screen.dart';
+
+class SafeZoneScreen extends StatefulWidget {
+  final String childId;
+  final LatLng initialLocation;
+
+  const SafeZoneScreen({
+    Key? key,
+    required this.childId,
+    required this.initialLocation,
+  }) : super(key: key);
 
   @override
-  _AddGeoParentState createState() => _AddGeoParentState();
+  _SafeZoneScreenState createState() => _SafeZoneScreenState();
 }
 
-class _AddGeoParentState extends State<AddGeoParent> {
-  LatLng? _safeZoneLocation;
+class _SafeZoneScreenState extends State<SafeZoneScreen> {
+  GoogleMapController? _mapController;
+  LatLng? _selectedLocation;
+  double _safeZoneRadius = 100; // القطر المبدئي لمنطقة الأمان
 
-  // Default location if GPS is not available
-  final LatLng _initialLocation =
-      const LatLng(30.033333, 31.233334); // Cairo, Egypt
-
-  // Method to set the selected location on the map
-  void _onMapTap(LatLng location) {
-    setState(() {
-      _safeZoneLocation = location;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _selectedLocation = widget.initialLocation;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Set Safe Zone"),
+        title: const Text('تحديد منطقة الأمان'),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: _initialLocation,
-                zoom: 14.0,
+          GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: widget.initialLocation,
+              zoom: 15,
+            ),
+            onMapCreated: (controller) {
+              setState(() {
+                _mapController = controller;
+              });
+            },
+            markers: {
+              Marker(
+                markerId: const MarkerId('child_location'),
+                position: _selectedLocation!,
+                infoWindow: const InfoWindow(title: 'موقع الطفل'),
               ),
-              onMapCreated: (GoogleMapController controller) {},
-              onTap: _onMapTap, // Method to handle map tap
-              markers: _safeZoneLocation != null
-                  ? {
-                      Marker(
-                        markerId: const MarkerId('safe_zone'),
-                        position: _safeZoneLocation!,
-                      )
-                    }
-                  : {},
+            },
+            circles: {
+              Circle(
+                circleId: const CircleId('safe_zone'),
+                center: _selectedLocation!,
+                radius: _safeZoneRadius, // استخدام القطر المتغير
+                strokeColor: Colors.blue.withOpacity(0.5),
+                fillColor: Colors.blue.withOpacity(0.3),
+                strokeWidth: 1,
+              ),
+            },
+          ),
+          Positioned(
+            bottom: 20,
+            left: 10,
+            right: 10,
+            child: Column(
+              children: [
+                Slider(
+                  value: _safeZoneRadius,
+                  min: 50,
+                  max: 500, // تحديد مدى القطر المسموح به
+                  divisions: 10, // تقسيم القيم
+                  label: '${_safeZoneRadius.toStringAsFixed(0)} متر',
+                  onChanged: (value) {
+                    setState(() {
+                      _safeZoneRadius = value; // تحديث القطر في الوقت الفعلي
+                    });
+                  },
+                ),
+                Text(
+                  'نصف قطر منطقة الأمان: ${_safeZoneRadius.toStringAsFixed(0)} متر',
+                  style: const TextStyle(fontSize: 16),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_selectedLocation != null) {
+                          _saveSafeZone();
+                          Navigator.pop(context);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('يرجى تحديد منطقة الأمان أولاً')),
+                          );
+                        }
+                      },
+                      child: const Text('حفظ'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AlertSettingsScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text('إعدادات التنبيهات'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GeofencingScreen(
+                              safeZoneCenter: _selectedLocation!,
+                              safeZoneRadius: _safeZoneRadius,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('مراقبة الطفل'),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          if (_safeZoneLocation != null)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(
-                      "Safe Zone Location: ${_safeZoneLocation!.latitude}, ${_safeZoneLocation!.longitude}"),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Pass the selected location to the GeofenceCubit
-                      context.read<GeofenceCubit>().setSafeZone(
-                            _safeZoneLocation!.latitude,
-                            _safeZoneLocation!.longitude,
-                          );
-                      Navigator.pop(context, _safeZoneLocation);
-                    },
-                    child: const Text("Confirm Safe Zone"),
-                  ),
-                ],
-              ),
-            )
-          else
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text("Tap on the map to set the Safe Zone."),
-            ),
         ],
       ),
     );
+  }
+
+  void _saveSafeZone() {
+    final String parentId = FirebaseAuth.instance.currentUser!.uid;
+    final double latitude = _selectedLocation!.latitude;
+    final double longitude = _selectedLocation!.longitude;
+
+    print(
+        'Safe Zone saved for child: $latitude, $longitude with radius $_safeZoneRadius meters');
   }
 }

@@ -34,13 +34,13 @@ class ChildHomeCubit extends Cubit<ChildHomeState> {
     _setupFirestoreListener();
   }
   Future<void> startForegroundService() async {
-
     try {
       await platform.invokeMethod('startAppUsageService', {'childId': childId});
     } on PlatformException catch (e) {
       print("Failed to start app usage service: '${e.message}'.");
     }
   }
+
   Future<void> fetchApps() async {
     emit(ChildHomeLoading());
     try {
@@ -60,7 +60,8 @@ class ChildHomeCubit extends Cubit<ChildHomeState> {
             .get();
 
         if (settingsSnapshot.exists) {
-          Map<String, dynamic> appData = settingsSnapshot.data() as Map<String, dynamic>;
+          Map<String, dynamic> appData =
+              settingsSnapshot.data() as Map<String, dynamic>;
           List<App> result = appData.entries.map((entry) {
             return App(
               packageName: entry.key ?? "",
@@ -94,7 +95,6 @@ class ChildHomeCubit extends Cubit<ChildHomeState> {
       emit(ChildHomeError(e.toString()));
     }
   }
-
 
   void _setupFirestoreListener() {
     FirebaseFirestore.instance

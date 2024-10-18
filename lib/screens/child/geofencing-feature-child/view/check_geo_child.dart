@@ -54,13 +54,7 @@ class CheckGeoChild extends StatelessWidget {
       children: [
         Text("Your location: ${state.latitude}, ${state.longitude}"),
         ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const AddGeoParent(),
-              ),
-            );
-          },
+          onPressed: () {},
           child: const Text("Go to Parent Page"),
         ),
       ],

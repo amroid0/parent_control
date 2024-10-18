@@ -21,11 +21,19 @@ class ChildLocationsError extends ChildLocationsState {
   ChildLocationsError(this.error);
 }
 
+class SafeZoneUpdated extends ChildLocationsState {
+  final String childId;
+  final GeoPoint safeZoneCenter;
+  final double radius;
+
+  SafeZoneUpdated(this.childId, this.safeZoneCenter, this.radius);
+}
+
 class ChildLocationsCubit extends Cubit<ChildLocationsState> {
   ChildLocationsCubit(this.parentId) : super(ChildLocationsInitial());
 
   final String parentId;
-  Map<String, StreamSubscription<DocumentSnapshot>> _subscriptions = {};
+  final Map<String, StreamSubscription<DocumentSnapshot>> _subscriptions = {};
 
   void listenToLocations() async {
     emit(ChildLocationsLoading());
@@ -37,7 +45,6 @@ class ChildLocationsCubit extends Cubit<ChildLocationsState> {
 
       if (parentSnapshot.exists) {
         List<String> childIds = List<String>.from(parentSnapshot['childIds']);
-
         if (childIds.isEmpty) {
           emit(ChildLocationsLoaded({}, {}));
           return;
@@ -52,12 +59,12 @@ class ChildLocationsCubit extends Cubit<ChildLocationsState> {
             final latitude = data['latitude'];
             final longitude = data['longitude'];
             locations[childId] = GeoPoint(latitude, longitude);
-          }else{
-            locations[childId] = GeoPoint(0, 0);
-
+          } else {
+            locations[childId] = const GeoPoint(0, 0);
           }
 
-          if (locations.length == childIds.length && childNames.length == childIds.length) {
+          if (locations.length == childIds.length &&
+              childNames.length == childIds.length) {
             emit(ChildLocationsLoaded(locations, childNames));
           }
         }
@@ -91,13 +98,25 @@ class ChildLocationsCubit extends Cubit<ChildLocationsState> {
 
         await Future.wait(nameFutures);
 
-        if (locations.length == childIds.length && childNames.length == childIds.length) {
+        if (locations.length == childIds.length &&
+            childNames.length == childIds.length) {
           emit(ChildLocationsLoaded(locations, childNames));
         }
       }
     } catch (e) {
       emit(ChildLocationsError(e.toString()));
     }
+  }
+
+  void updateSafeZone(String childId, GeoPoint center, double radius) {
+    FirebaseFirestore.instance.collection('children').doc(childId).update({
+      'safeZoneCenter': center,
+      'safeZoneRadius': radius,
+    }).then((_) {
+      emit(SafeZoneUpdated(childId, center, radius));
+    }).catchError((error) {
+      emit(ChildLocationsError(error.toString()));
+    });
   }
 
   @override
