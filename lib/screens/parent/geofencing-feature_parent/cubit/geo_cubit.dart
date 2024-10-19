@@ -50,11 +50,6 @@ class GeofencingCubit extends Cubit<GeofencingState> {
     }
   }
 
-/*************  ✨ Codeium Command 🌟  *************/
-  /// سجل حدث دخول / خروج الطفل من المنطقة الآمنة
-  ///
-  /// [childId] هو معرف الطفل
-  /// [entered] هو true إذا دخل الطفل المنطقة الآمنة، false إذا خرج
   void _logGeofenceEvent(String childId, bool entered) {
     FirebaseFirestore.instance.collection('geofenceEvents').add({
       'childId': childId,
@@ -62,5 +57,4 @@ class GeofencingCubit extends Cubit<GeofencingState> {
       'event': entered ? 'entered' : 'left',
     });
   }
-/******  05205289-ac49-4647-a18e-d66d5de13b6b  *******/
 }

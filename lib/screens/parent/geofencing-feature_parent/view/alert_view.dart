@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/alert_cubit.dart';
 import '../cubit/alert_settings_cubit.dart';
 
-
 class AlertSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -63,19 +62,18 @@ class _AlertSettingsViewState extends State<AlertSettingsView> {
           ),
           ElevatedButton(
             onPressed: () {
-              // حفظ الإعدادات باستخدام Cubit
               context.read<AlertSettingsCubit>().saveAlertSettings(
                     _sendPushNotification,
                     _sendSMS,
                     _sendEmail,
                   );
             },
-            child: Text('حفظ الإعدادات'),
+            child: Text('Save Settings'),
           ),
           BlocBuilder<AlertSettingsCubit, AlertSettingsState>(
             builder: (context, state) {
               if (state is AlertSettingsSaved) {
-                return Text('تم حفظ الإعدادات بنجاح');
+                return Text('Settings saved successfully');
               }
               return Container();
             },

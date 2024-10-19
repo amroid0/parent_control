@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:parent_control/screens/parent/home_parent/widgets/children_list.dart';
+import 'children_list.dart';
+import '../../widgets/loading.dart';
 import '../home_parent_cubit.dart';
 
 class HomeTab extends StatelessWidget {
@@ -24,7 +25,7 @@ class HomeTab extends StatelessWidget {
         child: BlocBuilder<ParentHomeCubit, ParentHomeState>(
           builder: (context, state) {
             if (state is ParentHomeLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child:  LoadingWidget());
             } else if (state is ParentHomeLoaded) {
               return ChildrenList(children: state.children);
             } else if (state is ParentHomeError) {

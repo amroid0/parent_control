@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:parent_control/screens/parent/widgets/custom_register_button.dart';
-import 'package:parent_control/screens/parent/widgets/custom_text_filed.dart';
+import 'widget/custom_register_button.dart';
+import '../widgets/custom_text_filed.dart';
 import 'parent_register_cubit.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -48,7 +48,7 @@ class RegisterParentScreen extends StatelessWidget {
                         children: [
                           const SizedBox(height: 20),
                           Image.asset(
-                            'assets/logo.png', // Replace with your logo path
+                            'assets/logo.png', 
                             height: 150,
                           ),
                           const SizedBox(height: 40),

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:quickalert/quickalert.dart';
 import 'parent_login_cubit.dart';
+import 'widget/register_link.dart';
+import '../widgets/custom_text_filed.dart';
+import 'package:quickalert/quickalert.dart';
+
+import 'widget/custom_login_button.dart';
 
 class LoginParentScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  LoginParentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +50,24 @@ class LoginParentScreen extends StatelessWidget {
                             height: 150,
                           ),
                           const SizedBox(height: 40),
-                          _buildTextField(_emailController, 'Email'),
+                          CustomTextField(
+                            controller: _emailController,
+                            label: 'Email',
+                          ),
                           const SizedBox(height: 20),
-                          _buildTextField(_passwordController, 'Password',
-                              obscureText: true),
+                          CustomTextField(
+                            controller: _passwordController,
+                            label: 'Password',
+                            obscureText: true,
+                          ),
                           const SizedBox(height: 40),
-                          _buildLoginButton(context, state),
+                          LoginButton(
+                            emailController: _emailController,
+                            passwordController: _passwordController,
+                            state: state,
+                          ),
                           const SizedBox(height: 10),
-                          _buildRegisterLink(context),
+                          const RegisterLink(),
                         ],
                       ),
                     ],
@@ -61,70 +76,6 @@ class LoginParentScreen extends StatelessWidget {
               ),
             );
           },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String label,
-      {bool obscureText = false}) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[200]!, width: 2),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            labelText: label,
-            border: InputBorder.none,
-          ),
-          obscureText: obscureText,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoginButton(BuildContext context, ParentLoginState state) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          context.read<ParentLoginCubit>().loginParent(
-                _emailController.text,
-                _passwordController.text,
-              );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        child: state is ParentLoginLoading
-            ? const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
-            : const Text(
-                'Login',
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-      ),
-    );
-  }
-
-  Widget _buildRegisterLink(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        Navigator.pushNamed(context, '/registerParent');
-      },
-      child: const Text(
-        'Sign Up',
-        style: TextStyle(
-          color: Colors.blue,
-          fontSize: 16,
         ),
       ),
     );

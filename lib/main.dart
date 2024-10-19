@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:parent_control/material.dart';
+import 'material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'default_firebase_options.dart';
 

@@ -5,9 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:ui' as ui;
-import 'package:parent_control/screens/parent/home_parent/location_child_cubit.dart';
+import '../location_child_cubit.dart';
 
 import '../../geofencing-feature_parent/view/add_geo_parent.dart';
+import '../../widgets/loading.dart';
 
 class LocationsTab extends StatefulWidget {
   const LocationsTab({super.key});
@@ -53,7 +54,7 @@ class _LocationsTabState extends State<LocationsTab> {
       child: BlocBuilder<ChildLocationsCubit, ChildLocationsState>(
         builder: (context, state) {
           if (state is ChildLocationsLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child:  LoadingWidget());
           } else if (state is ChildLocationsLoaded) {
             return Column(
               children: [

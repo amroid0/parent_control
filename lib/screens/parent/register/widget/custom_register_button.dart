@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:parent_control/screens/parent/register/parent_register_cubit.dart';
+import '../parent_register_cubit.dart';
+
+import '../../widgets/loading.dart';
 
 class RegisterButton extends StatelessWidget {
   final BuildContext context;
@@ -38,8 +40,7 @@ class RegisterButton extends StatelessWidget {
           ),
         ),
         child: state is ParentRegistrationLoading
-            ? const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+            ? const LoadingWidget()
             : const Text(
                 'Register',
                 style: TextStyle(fontSize: 18, color: Colors.white),

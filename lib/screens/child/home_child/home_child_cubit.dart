@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:parent_control/common/app_state.dart';
+import '../../../common/app_state.dart';
 import 'package:usage_stats/usage_stats.dart';
 import '../../../models/app.dart';
 

@@ -22,7 +22,7 @@ class SafeZoneScreen extends StatefulWidget {
 class _SafeZoneScreenState extends State<SafeZoneScreen> {
   GoogleMapController? _mapController;
   LatLng? _selectedLocation;
-  double _safeZoneRadius = 100; // القطر المبدئي لمنطقة الأمان
+  double _safeZoneRadius = 100;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _SafeZoneScreenState extends State<SafeZoneScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('تحديد منطقة الأمان'),
+        title: const Text('Add Safe Zone'),
       ),
       body: Stack(
         children: [
@@ -52,14 +52,14 @@ class _SafeZoneScreenState extends State<SafeZoneScreen> {
               Marker(
                 markerId: const MarkerId('child_location'),
                 position: _selectedLocation!,
-                infoWindow: const InfoWindow(title: 'موقع الطفل'),
+                infoWindow: const InfoWindow(title: 'Child Location'),
               ),
             },
             circles: {
               Circle(
                 circleId: const CircleId('safe_zone'),
                 center: _selectedLocation!,
-                radius: _safeZoneRadius, // استخدام القطر المتغير
+                radius: _safeZoneRadius,
                 strokeColor: Colors.blue.withOpacity(0.5),
                 fillColor: Colors.blue.withOpacity(0.3),
                 strokeWidth: 1,
@@ -75,17 +75,17 @@ class _SafeZoneScreenState extends State<SafeZoneScreen> {
                 Slider(
                   value: _safeZoneRadius,
                   min: 50,
-                  max: 500, // تحديد مدى القطر المسموح به
-                  divisions: 10, // تقسيم القيم
-                  label: '${_safeZoneRadius.toStringAsFixed(0)} متر',
+                  max: 500,
+                  divisions: 10,
+                  label: '${_safeZoneRadius.toStringAsFixed(0)} Meters',
                   onChanged: (value) {
                     setState(() {
-                      _safeZoneRadius = value; // تحديث القطر في الوقت الفعلي
+                      _safeZoneRadius = value;
                     });
                   },
                 ),
                 Text(
-                  'نصف قطر منطقة الأمان: ${_safeZoneRadius.toStringAsFixed(0)} متر',
+                  ' Safe Zone Radius: ${_safeZoneRadius.toStringAsFixed(0)} Meters',
                   style: const TextStyle(fontSize: 16),
                 ),
                 Row(
@@ -99,11 +99,11 @@ class _SafeZoneScreenState extends State<SafeZoneScreen> {
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text('يرجى تحديد منطقة الأمان أولاً')),
+                                content: Text('Please select a location')),
                           );
                         }
                       },
-                      child: const Text('حفظ'),
+                      child: const Text('Save Safe Zone'),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -114,7 +114,7 @@ class _SafeZoneScreenState extends State<SafeZoneScreen> {
                           ),
                         );
                       },
-                      child: const Text('إعدادات التنبيهات'),
+                      child: const Text('Settings'),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -128,7 +128,7 @@ class _SafeZoneScreenState extends State<SafeZoneScreen> {
                           ),
                         );
                       },
-                      child: const Text('مراقبة الطفل'),
+                      child: const Text('Start Geofencing'),
                     ),
                   ],
                 ),

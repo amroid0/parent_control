@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'widgets/home_tab.dart';
 import 'widgets/location_tap.dart';
 import 'widgets/profile_tap.dart';
@@ -30,27 +30,28 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Parent Home'),
         automaticallyImplyLeading: false,
       ),
       body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped,
+      bottomNavigationBar: SalomonBottomBar(
         currentIndex: _currentIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+        onTap: onTabTapped,
+        items: [
+          SalomonBottomBarItem(
+            icon: const Icon(Icons.home),
+            title: const Text("Home"),
+            selectedColor: Colors.blue,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.location_on),
-            label: 'Locations',
+          SalomonBottomBarItem(
+            icon: const Icon(Icons.location_on),
+            title: const Text("Locations"),
+            selectedColor: Colors.purple,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+          SalomonBottomBarItem(
+            icon: const Icon(Icons.person),
+            title: const Text("Profile"),
+            selectedColor: Colors.orange,
           ),
         ],
       ),

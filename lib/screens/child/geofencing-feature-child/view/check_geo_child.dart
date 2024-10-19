@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:parent_control/screens/child/geofencing-feature-child/cubit/geo_cubit.dart';
-import 'package:parent_control/screens/child/geofencing-feature-child/cubit/geo_state.dart';
-import 'package:parent_control/screens/parent/geofencing-feature_parent/cubit/geo_parent_cubit.dart';
-import 'package:parent_control/screens/parent/geofencing-feature_parent/view/add_geo_parent.dart';
+import '../cubit/geo_cubit.dart';
+import '../cubit/geo_state.dart';
+import '../../../parent/geofencing-feature_parent/cubit/geo_parent_cubit.dart';
+import '../../../parent/geofencing-feature_parent/view/add_geo_parent.dart';
 
 class CheckGeoChild extends StatelessWidget {
   const CheckGeoChild({super.key});
