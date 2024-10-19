@@ -5,7 +5,7 @@ import 'add_child_cubit.dart';
 class AddChildScreen extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-
+static const String routeName = '/addChild';
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -5,19 +5,55 @@ import 'screens/parent/add_child/add_child_screen.dart';
 import 'screens/parent/home_parent/home_parent_screen.dart';
 import 'screens/parent/parent_login/login_parent_screen.dart';
 import 'screens/parent/register/register_parent_screen.dart';
+import 'screens/parent/widgets/error_route.dart';
 import 'screens/splash/splash_screen.dart';
 import 'screens/child/child_login/login_child_screen.dart';
 import 'screens/user_type_selection_screen.dart';
 
-final Map<String, WidgetBuilder> appRoutes = {
-  '/splash': (context) => SplashScreen(),
-  '/': (context) => UserTypeSelectionScreen(),
-  '/registerParent': (context) => RegisterParentScreen(),
-  '/loginParent': (context) => LoginParentScreen(),
-  '/loginChild': (context) => LoginChildScreen(),
-  '/addChild': (context) => AddChildScreen(),
-  '/parentHome': (context) => const ParentHomeScreen(),
-  '/childMain': (context) => ChildHomeScreen(
-      childId: ModalRoute.of(context)!.settings.arguments as String),
-  '/checkGeoChild': (context) => const CheckGeoChild(),
-};
+Route<dynamic> onGenerateRoute(RouteSettings settings) {
+  switch (settings.name) {
+    case SplashScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => SplashScreen(),
+      );
+    case ParentHomeScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const ParentHomeScreen(),
+      );
+    case ChildHomeScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => ChildHomeScreen(
+          childId: settings.arguments as String,
+        ),
+      );
+    case CheckGeoChild.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const CheckGeoChild(),
+      );
+    case AddChildScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => AddChildScreen(),
+      );
+    case RegisterParentScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => RegisterParentScreen(),
+      );
+    case LoginParentScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => LoginParentScreen(),
+      );
+    case LoginChildScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => LoginChildScreen(),
+      );
+    case UserTypeSelectionScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) =>  UserTypeSelectionScreen(),
+      );
+
+    default:
+      return MaterialPageRoute(
+        builder: (context) => const ErrorScreen(),
+      );
+  }
+}

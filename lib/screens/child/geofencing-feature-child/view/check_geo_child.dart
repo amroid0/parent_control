@@ -7,7 +7,7 @@ import '../../../parent/geofencing-feature_parent/view/add_geo_parent.dart';
 
 class CheckGeoChild extends StatelessWidget {
   const CheckGeoChild({super.key});
-
+static const String routeName = '/checkGeoChild';
   @override
   Widget build(BuildContext context) {
     return Scaffold(

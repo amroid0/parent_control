@@ -25,7 +25,7 @@ class HomeTab extends StatelessWidget {
         child: BlocBuilder<ParentHomeCubit, ParentHomeState>(
           builder: (context, state) {
             if (state is ParentHomeLoading) {
-              return const Center(child:  LoadingWidget());
+              return const Center(child: LoadingWidget());
             } else if (state is ParentHomeLoaded) {
               return ChildrenList(children: state.children);
             } else if (state is ParentHomeError) {

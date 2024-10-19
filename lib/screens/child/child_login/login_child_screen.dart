@@ -7,19 +7,20 @@ import 'child_login_cubit.dart';
 class LoginChildScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _tokenController = TextEditingController();
-
+  static const String routeName = '/loginChild';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login as Child'),
+        title: const Text('Login as Child'),
       ),
       body: BlocProvider(
         create: (context) => ChildLoginCubit(),
         child: BlocConsumer<ChildLoginCubit, ChildLoginState>(
           listener: (context, state) {
             if (state is ChildLoginSuccess) {
-              Navigator.pushReplacementNamed(context, '/childMain', arguments: state.childId);
+              Navigator.pushReplacementNamed(context, '/childMain',
+                  arguments: state.childId);
             } else if (state is ChildLoginFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),
@@ -35,22 +36,21 @@ class LoginChildScreen extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Image.asset(
                           'assets/logo.png', // Replace with your logo path
                           height: 150,
                         ),
-                        SizedBox(height: 40),
+                        const SizedBox(height: 40),
                         _buildTextField(_emailController, 'Email'),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         _buildTextField(_tokenController, 'Token'),
-                        SizedBox(height: 40),
+                        const SizedBox(height: 40),
                         _buildLoginButton(context, state),
                       ],
                     ),
-                    Column(
-                      children: [
-                      ],
+                    const Column(
+                      children: [],
                     ),
                   ],
                 ),
@@ -62,7 +62,8 @@ class LoginChildScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label, {bool obscureText = false}) {
+  Widget _buildTextField(TextEditingController controller, String label,
+      {bool obscureText = false}) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey[200]!, width: 2),
@@ -88,25 +89,25 @@ class LoginChildScreen extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           context.read<ChildLoginCubit>().loginChild(
-            _emailController.text,
-            _tokenController.text,
-          );
+                _emailController.text,
+                _tokenController.text,
+              );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ),
         child: state is ChildLoginLoading
-            ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
-            : Text(
-          'Login',
-          style: TextStyle(fontSize: 18,color: Colors.white),
-        ),
+            ? const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+            : const Text(
+                'Login',
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
       ),
     );
   }
-
 }

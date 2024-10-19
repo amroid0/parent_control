@@ -10,7 +10,7 @@ import 'widget/custom_login_button.dart';
 class LoginParentScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  static const String routeName = '/loginParent';
   LoginParentScreen({super.key});
 
   @override

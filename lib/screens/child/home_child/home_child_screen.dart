@@ -8,6 +8,8 @@ import 'location_cubit.dart';
 class ChildHomeScreen extends StatelessWidget {
   final String childId;
 
+  static const routeName = '/childHome';
+
   ChildHomeScreen({required this.childId});
 
   @override

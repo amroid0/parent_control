@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'route.dart';
+import 'screens/splash/splash_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Kids Safe',
-      initialRoute: '/splash',
-      routes: appRoutes,
+      onGenerateRoute: onGenerateRoute,
+      initialRoute: SplashScreen.routeName,
+      debugShowCheckedModeBanner: false,
+      
     );
   }
 }

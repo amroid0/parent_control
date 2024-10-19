@@ -9,6 +9,7 @@ class RegisterParentScreen extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  static const String routeName = '/registerParent';
 
   RegisterParentScreen({super.key});
 
@@ -48,7 +49,7 @@ class RegisterParentScreen extends StatelessWidget {
                         children: [
                           const SizedBox(height: 20),
                           Image.asset(
-                            'assets/logo.png', 
+                            'assets/logo.png',
                             height: 150,
                           ),
                           const SizedBox(height: 40),

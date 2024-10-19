@@ -6,12 +6,13 @@ import 'widgets/profile_tap.dart';
 
 class ParentHomeScreen extends StatefulWidget {
   const ParentHomeScreen({super.key});
-
+ static const String routeName = '/parentHome';
   @override
   _ParentHomeScreenState createState() => _ParentHomeScreenState();
 }
 
 class _ParentHomeScreenState extends State<ParentHomeScreen> {
+ 
   int _currentIndex = 0;
 
   final List<Widget> _children = [
