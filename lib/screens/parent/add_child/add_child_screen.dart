@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:parent_control/core/utils/app_images.dart';
 import 'add_child_cubit.dart';
 
 class AddChildScreen extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-static const String routeName = '/addChild';
+  static const String routeName = '/addChild';
 
   AddChildScreen({super.key});
   @override
@@ -36,7 +37,7 @@ static const String routeName = '/addChild';
                     Column(
                       children: [
                         const SizedBox(height: 20),
-                        Image.asset("assets/child.png",
+                        Image.asset(Assets.imagesChild,
                             width: 100, height: 100),
                         const SizedBox(height: 40),
                         _buildTextField(_nameController, 'Child Name'),
@@ -121,7 +122,8 @@ static const String routeName = '/addChild';
               const SizedBox(height: 10),
               Text(
                 token,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ],
           ),

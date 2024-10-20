@@ -2,36 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/geo_cubit.dart';
 import '../cubit/geo_state.dart';
-import '../../../parent/geofencing-feature_parent/cubit/geo_parent_cubit.dart';
 
 class CheckGeoChild extends StatelessWidget {
   const CheckGeoChild({super.key});
-static const String routeName = '/checkGeoChild';
+  static const String routeName = '/checkGeoChild';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text("Child Home")),
-        body: MultiBlocProvider(
-          providers: ([
-            BlocProvider(create: (context) => GeofenceCubit()),
-          ]),
-          child: BlocProvider(
-            create: (context) => GeofenceChildCubit(),
-            child: BlocBuilder<GeofenceChildCubit, GeofenceChildState>(
-              builder: (context, state) {
-                if (state is GeofenceChildLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is GeofenceChildLoaded) {
-                  return _locationSuccess(context, state);
-                } else if (state is GeofenceFailure) {
-                  return _locationError(state.error);
-                } else if (state is GeofenceChildInitial) {
-                  return _initialUI(context);
-                } else {
-                  return const Center(child: Text("Unknown error occurred"));
-                }
-              },
-            ),
+        body: BlocProvider(
+          create: (context) => GeofenceChildCubit(),
+          child: BlocBuilder<GeofenceChildCubit, GeofenceChildState>(
+            builder: (context, state) {
+              if (state is GeofenceChildLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is GeofenceChildLoaded) {
+                return _locationSuccess(context, state);
+              } else if (state is GeofenceFailure) {
+                return _locationError(state.error);
+              } else if (state is GeofenceChildInitial) {
+                return _initialUI(context);
+              } else {
+                return const Center(child: Text("Unknown error occurred"));
+              }
+            },
           ),
         ));
   }

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:parent_control/core/utils/app_images.dart';
 import 'dart:ui' as ui;
 import '../location_child_cubit.dart';
-
-import '../../geofencing-feature_parent/view/add_geo_parent.dart';
+import '../../geofencing-feature_parent/view/safe_zone_screen.dart.dart';
 import '../../widgets/loading.dart';
 
 class LocationsTab extends StatefulWidget {
@@ -29,7 +29,7 @@ class _LocationsTabState extends State<LocationsTab> {
   }
 
   Future<void> _loadMarkerIcon() async {
-    final icon = await getBytesFromAsset('assets/child.png', 120);
+    final icon = await getBytesFromAsset(Assets.imagesChild, 120);
     setState(() {
       _markerIcon = icon;
     });
@@ -54,7 +54,7 @@ class _LocationsTabState extends State<LocationsTab> {
       child: BlocBuilder<ChildLocationsCubit, ChildLocationsState>(
         builder: (context, state) {
           if (state is ChildLocationsLoading) {
-            return const Center(child:  LoadingWidget());
+            return const Center(child: LoadingWidget());
           } else if (state is ChildLocationsLoaded) {
             return Column(
               children: [
@@ -128,7 +128,7 @@ class _LocationsTabState extends State<LocationsTab> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
-                                    "assets/child.png",
+                                    Assets.imagesChild,
                                     width: 30,
                                     height: 30,
                                   ),

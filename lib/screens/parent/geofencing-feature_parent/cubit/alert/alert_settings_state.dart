@@ -1,4 +1,4 @@
-import '../model/alert.dart';
+import '../../model/alert.dart';
 
 abstract class AlertSettingsState {}
 

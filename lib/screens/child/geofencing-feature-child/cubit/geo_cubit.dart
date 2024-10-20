@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'geo_state.dart';
-import 'package:parent_control/screens/parent/geofencing-feature_parent/cubit/geo_parent_cubit.dart';
 
 class GeofenceChildCubit extends Cubit<GeofenceChildState> {
   double? childLatitude;
@@ -49,9 +48,7 @@ class GeofenceChildCubit extends Cubit<GeofenceChildState> {
       childLatitude = position.latitude;
       childLongitude = position.longitude;
 
-      if (childLatitude != null && childLongitude != null) {
-        GeofenceCubit().setSafeZone(childLatitude!, childLongitude!);
-      }
+      if (childLatitude != null && childLongitude != null) {}
 
       emit(GeofenceChildLoaded(
         latitude: childLatitude!,

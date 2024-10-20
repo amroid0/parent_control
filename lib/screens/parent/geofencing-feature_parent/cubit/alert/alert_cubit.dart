@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 
-import '../model/alert.dart';
-import 'alert_settings_cubit.dart';
+import '../../model/alert.dart';
+import 'alert_settings_state.dart';
 
 class AlertSettingsCubit extends Cubit<AlertSettingsState> {
   AlertSettingsCubit() : super(AlertSettingsInitial());

@@ -42,11 +42,11 @@ class GeofencingView extends StatelessWidget {
         if (state is GeofencingLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is GeofencingInsideZone) {
-          return const Center(child: Text('الطفل داخل المنطقة الآمنة'));
+          return const Center(child: Text('Child is inside the safe zone'));
         } else if (state is GeofencingOutsideZone) {
-          return const Center(child: Text('الطفل خارج المنطقة الآمنة'));
+          return const Center(child: Text('Child is outside the safe zone'));
         }
-        return const Center(child: Text('جاري مراقبة الموقع...'));
+        return const Center(child: Text('Get your child location'));
       },
     );
   }

@@ -34,6 +34,7 @@ dependencies:
 
   bloc: any
   shared_preferences: any
+  equatable: ^2.0.5
 dependency_overrides:
       firebase_storage: ^11.2.4
       firebase_core: ^2.12.0

@@ -20,14 +20,11 @@ class GeofencingCubit extends Cubit<GeofencingState> {
       final currentLocation = LatLng(position.latitude, position.longitude);
       final distance = _calculateDistance(currentLocation, safeZoneCenter);
 
-      // تحديث الحالة بناءً على ما إذا كان الطفل داخل أو خارج المنطقة الآمنة
       if (distance > safeZoneRadius) {
-        // خارج المنطقة الآمنة
         _triggerAlert(childId, false);
         _logGeofenceEvent(childId, false);
         emit(GeofencingOutsideZone());
       } else {
-        // داخل المنطقة الآمنة
         _logGeofenceEvent(childId, true);
         emit(GeofencingInsideZone());
       }
@@ -45,7 +42,6 @@ class GeofencingCubit extends Cubit<GeofencingState> {
 
   void _triggerAlert(String childId, bool insideSafeZone) {
     if (!insideSafeZone) {
-      // تنفيذ التنبيه هنا
       print('الطفل خرج من المنطقة الآمنة');
     }
   }

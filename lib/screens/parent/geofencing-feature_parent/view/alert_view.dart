@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../cubit/alert_cubit.dart';
-import '../cubit/alert_settings_cubit.dart';
+import '../cubit/alert/alert_cubit.dart';
+import '../cubit/alert/alert_settings_state.dart';
 
 class AlertSettingsScreen extends StatelessWidget {
   const AlertSettingsScreen({super.key});
@@ -10,7 +10,7 @@ class AlertSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('إعدادات التنبيهات')),
+      appBar: AppBar(title: const Text('Alert Settings')),
       body: BlocProvider(
         create: (_) => AlertSettingsCubit(),
         child: const AlertSettingsView(),
@@ -38,7 +38,7 @@ class _AlertSettingsViewState extends State<AlertSettingsView> {
       child: Column(
         children: [
           CheckboxListTile(
-            title: const Text('إشعارات (Push Notification)'),
+            title: const Text('Notification'),
             value: _sendPushNotification,
             onChanged: (value) {
               setState(() {
@@ -47,7 +47,7 @@ class _AlertSettingsViewState extends State<AlertSettingsView> {
             },
           ),
           CheckboxListTile(
-            title: const Text('رسائل (SMS)'),
+            title: const Text('SMS'),
             value: _sendSMS,
             onChanged: (value) {
               setState(() {
@@ -56,7 +56,7 @@ class _AlertSettingsViewState extends State<AlertSettingsView> {
             },
           ),
           CheckboxListTile(
-            title: const Text('بريد إلكتروني (Email)'),
+            title: const Text('Email'),
             value: _sendEmail,
             onChanged: (value) {
               setState(() {
