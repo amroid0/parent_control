@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:parent_control/core/utils/app_images.dart';
 
 import '../../../../models/child.dart';
+import '../../child_profile/child_profile_screen.dart';
 
 class ChildrenList extends StatelessWidget {
   final List<Child> children;
@@ -25,14 +27,17 @@ class ChildrenList extends StatelessWidget {
             itemBuilder: (context, index) {
               Child child = children[index];
               return ListTile(
-                leading: Image.asset("assets/child.png", width: 50, height: 50),
+                leading: Image.asset(Assets.imagesChild, width: 50, height: 50),
                 title: Text(child.name),
                 subtitle: Text(child.email),
                 onTap: () {
                   Navigator.pushNamed(
                     context,
-                    '/childProfile',
-                    arguments: child,
+                    ChildTokenScreen.routeName,
+                    arguments: {
+                      'token': child.token,
+                      'name': child.name,
+                    },
                   );
                 },
               );

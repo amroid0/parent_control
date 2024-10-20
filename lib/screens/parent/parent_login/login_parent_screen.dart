@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:parent_control/screens/parent/home_parent/home_parent_screen.dart';
+import '../../../core/utils/app_images.dart';
 import 'parent_login_cubit.dart';
 import 'widget/register_link.dart';
 import '../widgets/custom_text_filed.dart';
@@ -24,7 +26,8 @@ class LoginParentScreen extends StatelessWidget {
         child: BlocConsumer<ParentLoginCubit, ParentLoginState>(
           listener: (context, state) {
             if (state is ParentLoginSuccess) {
-              Navigator.pushReplacementNamed(context, '/parentHome');
+              Navigator.pushReplacementNamed(
+                  context, ParentHomeScreen.routeName);
             } else if (state is ParentLoginFailure) {
               QuickAlert.show(
                 context: context,
@@ -46,7 +49,7 @@ class LoginParentScreen extends StatelessWidget {
                         children: [
                           const SizedBox(height: 20),
                           Image.asset(
-                            'assets/logo.png', // Replace with your logo path
+                            Assets.imagesLogo,
                             height: 150,
                           ),
                           const SizedBox(height: 40),

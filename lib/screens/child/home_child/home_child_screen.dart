@@ -7,11 +7,8 @@ import 'location_cubit.dart';
 
 class ChildHomeScreen extends StatelessWidget {
   final String childId;
-
+  const ChildHomeScreen({super.key, required this.childId});
   static const routeName = '/childHome';
-
-  ChildHomeScreen({required this.childId});
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

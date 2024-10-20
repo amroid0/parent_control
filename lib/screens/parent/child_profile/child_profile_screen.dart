@@ -7,8 +7,9 @@ import 'child_profile_cubit.dart';
 class ChildTokenScreen extends StatelessWidget {
   final String token;
   final String name;
+  static const String routeName = '/child-token';
 
-  ChildTokenScreen({required this.token, required this.name});
+  const ChildTokenScreen({super.key, required this.token, required this.name});
 
   @override
   Widget build(BuildContext context) {

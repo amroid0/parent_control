@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:parent_control/core/utils/app_images.dart';
+import '../home_child/home_child_screen.dart';
 import 'child_login_cubit.dart';
 
 class LoginChildScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _tokenController = TextEditingController();
   static const String routeName = '/loginChild';
+
+  LoginChildScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +22,7 @@ class LoginChildScreen extends StatelessWidget {
         child: BlocConsumer<ChildLoginCubit, ChildLoginState>(
           listener: (context, state) {
             if (state is ChildLoginSuccess) {
-              Navigator.pushReplacementNamed(context, '/childMain',
+              Navigator.pushReplacementNamed(context, ChildHomeScreen.routeName,
                   arguments: state.childId);
             } else if (state is ChildLoginFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -38,7 +41,7 @@ class LoginChildScreen extends StatelessWidget {
                       children: [
                         const SizedBox(height: 20),
                         Image.asset(
-                          'assets/logo.png', // Replace with your logo path
+                          Assets.imagesLogo,
                           height: 150,
                         ),
                         const SizedBox(height: 40),

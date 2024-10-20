@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:parent_control/core/utils/app_images.dart';
 import '../child/home_child/home_child_screen.dart';
 import '../parent/home_parent/home_parent_screen.dart';
-import '../user_type_selection_screen.dart';
+import '../user type/user_type_selection_screen.dart';
 import 'splash_cubit.dart';
 
 class SplashScreen extends StatelessWidget {
