@@ -32,6 +32,8 @@ dependencies:
   flutter_screenutil: ^5.9.3
 
 
+  bloc: any
+  shared_preferences: any
 dependency_overrides:
       firebase_storage: ^11.2.4
       firebase_core: ^2.12.0

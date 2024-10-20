@@ -53,7 +53,7 @@ class LocationCubit extends Cubit<Position?> {
         channelName: 'Location Tracking Service',
         channelDescription: 'This service is used for tracking the user\'s location.',
       ),
-      iosNotificationOptions: IOSNotificationOptions(
+      iosNotificationOptions: const IOSNotificationOptions(
         showNotification: true,
         playSound: false,
       ),

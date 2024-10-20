@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 class App {
   final String packageName;

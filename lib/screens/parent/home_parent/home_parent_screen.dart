@@ -17,7 +17,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
   final List<Widget> _children = [
     const HomeTab(),
     const LocationsTab(),
-    ProfileTab(),
+    const ProfileTab(),
   ];
 
   void onTabTapped(int index) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:parent_control/screens/splash/splash_screen.dart';
 
 import '../child/child_login/login_child_screen.dart';
 import '../parent/parent_login/login_parent_screen.dart';
@@ -8,6 +7,8 @@ import 'Type_button.dart';
 
 class UserTypeSelectionScreen extends StatefulWidget {
   static const String routeName = '/userTypeSelection';
+
+  const UserTypeSelectionScreen({super.key});
 
   @override
   _UserTypeSelectionScreenState createState() =>

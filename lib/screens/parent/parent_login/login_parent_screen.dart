@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:parent_control/screens/parent/home_parent/home_parent_screen.dart';
+import '../home_parent/home_parent_screen.dart';
 import '../../../core/utils/app_images.dart';
 import 'parent_login_cubit.dart';
 import 'widget/register_link.dart';

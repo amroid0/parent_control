@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:parent_control/core/utils/app_images.dart';
+import '../../../../core/utils/app_images.dart';
 
 import '../../../../models/child.dart';
 import '../../child_profile/child_profile_screen.dart';

@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:parent_control/core/utils/app_images.dart';
+import '../../../core/utils/app_images.dart';
 import '../home_child/home_child_screen.dart';
 import 'child_login_cubit.dart';
 

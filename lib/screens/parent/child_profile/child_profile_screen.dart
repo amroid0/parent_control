@@ -27,33 +27,33 @@ class ChildTokenScreen extends StatelessWidget {
                 children: [
                   // General section to show the token
                   Container(
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.grey[200],
                     ),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           'Child Token:',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
                           token,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Title above the app list
-                  Align(
+                  const Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
                         'App List',
                         style: TextStyle(
@@ -63,12 +63,12 @@ class ChildTokenScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Expanded(
                     child: BlocBuilder<ChildTokenCubit, ChildTokenState>(
                       builder: (context, state) {
                         if (state is ChildTokenLoading) {
-                          return Center(child: CircularProgressIndicator());
+                          return const Center(child: CircularProgressIndicator());
                         } else if (state is ChildTokenLoaded) {
                           return ListView.separated(
                             itemCount: state.apps.length,
@@ -92,16 +92,16 @@ class ChildTokenScreen extends StatelessWidget {
                                                 BorderRadius.circular(15)),
                                       ),
                                       errorWidget: (context, url, error) =>
-                                          Icon(
+                                          const Icon(
                                         Icons.android,
                                         color: Colors.green,
                                       ),
                                     ),
-                                    SizedBox(width: 4),
+                                    const SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
                                         app.appName,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           overflow: TextOverflow.ellipsis,
@@ -136,7 +136,7 @@ class ChildTokenScreen extends StatelessWidget {
                                       },
                                     ),
                                     IconButton(
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.timelapse_rounded,
                                         color: Colors.blue,
                                       ),
@@ -152,7 +152,7 @@ class ChildTokenScreen extends StatelessWidget {
                         } else if (state is ChildTokenError) {
                           return Center(child: Text(state.error));
                         } else {
-                          return Center(child: Text('Something went wrong'));
+                          return const Center(child: Text('Something went wrong'));
                         }
                       },
                     ),
@@ -202,7 +202,7 @@ class ChildTokenScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -220,29 +220,29 @@ class ChildTokenScreen extends StatelessWidget {
   }
 
   void _showEditDialog(BuildContext screenContext, App app) {
-    TextEditingController _timeLimitController =
+    TextEditingController timeLimitController =
         TextEditingController(text: app.usageLimit.toString());
 
     showDialog(
       context: screenContext,
       builder: (context) {
         return AlertDialog(
-          title: Text('Edit Time Limit'),
+          title: const Text('Edit Time Limit'),
           content: TextField(
-            controller: _timeLimitController,
+            controller: timeLimitController,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(labelText: 'Time Limit (minutes)'),
+            decoration: const InputDecoration(labelText: 'Time Limit (minutes)'),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                int? newTimeLimit = int.tryParse(_timeLimitController.text);
+                int? newTimeLimit = int.tryParse(timeLimitController.text);
                 if (newTimeLimit != null) {
                   screenContext
                       .read<ChildTokenCubit>()
@@ -250,7 +250,7 @@ class ChildTokenScreen extends StatelessWidget {
                 }
                 Navigator.of(context).pop();
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/geo_cubit.dart';
 import '../cubit/geo_state.dart';
 import '../../../parent/geofencing-feature_parent/cubit/geo_parent_cubit.dart';
-import '../../../parent/geofencing-feature_parent/view/add_geo_parent.dart';
 
 class CheckGeoChild extends StatelessWidget {
   const CheckGeoChild({super.key});

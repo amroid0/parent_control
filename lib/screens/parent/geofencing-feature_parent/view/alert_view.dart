@@ -5,19 +5,23 @@ import '../cubit/alert_cubit.dart';
 import '../cubit/alert_settings_cubit.dart';
 
 class AlertSettingsScreen extends StatelessWidget {
+  const AlertSettingsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('إعدادات التنبيهات')),
+      appBar: AppBar(title: const Text('إعدادات التنبيهات')),
       body: BlocProvider(
         create: (_) => AlertSettingsCubit(),
-        child: AlertSettingsView(),
+        child: const AlertSettingsView(),
       ),
     );
   }
 }
 
 class AlertSettingsView extends StatefulWidget {
+  const AlertSettingsView({super.key});
+
   @override
   _AlertSettingsViewState createState() => _AlertSettingsViewState();
 }
@@ -34,7 +38,7 @@ class _AlertSettingsViewState extends State<AlertSettingsView> {
       child: Column(
         children: [
           CheckboxListTile(
-            title: Text('إشعارات (Push Notification)'),
+            title: const Text('إشعارات (Push Notification)'),
             value: _sendPushNotification,
             onChanged: (value) {
               setState(() {
@@ -43,7 +47,7 @@ class _AlertSettingsViewState extends State<AlertSettingsView> {
             },
           ),
           CheckboxListTile(
-            title: Text('رسائل (SMS)'),
+            title: const Text('رسائل (SMS)'),
             value: _sendSMS,
             onChanged: (value) {
               setState(() {
@@ -52,7 +56,7 @@ class _AlertSettingsViewState extends State<AlertSettingsView> {
             },
           ),
           CheckboxListTile(
-            title: Text('بريد إلكتروني (Email)'),
+            title: const Text('بريد إلكتروني (Email)'),
             value: _sendEmail,
             onChanged: (value) {
               setState(() {
@@ -68,12 +72,12 @@ class _AlertSettingsViewState extends State<AlertSettingsView> {
                     _sendEmail,
                   );
             },
-            child: Text('Save Settings'),
+            child: const Text('Save Settings'),
           ),
           BlocBuilder<AlertSettingsCubit, AlertSettingsState>(
             builder: (context, state) {
               if (state is AlertSettingsSaved) {
-                return Text('Settings saved successfully');
+                return const Text('Settings saved successfully');
               }
               return Container();
             },

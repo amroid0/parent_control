@@ -9,11 +9,11 @@ class LoginButton extends StatelessWidget {
   final ParentLoginState state;
 
   const LoginButton({
-    Key? key,
+    super.key,
     required this.emailController,
     required this.passwordController,
     required this.state,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

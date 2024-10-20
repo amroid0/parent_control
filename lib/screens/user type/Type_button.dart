@@ -7,16 +7,16 @@ class UserTypeButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const UserTypeButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.icon,
     required this.isSelected,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 250,
       height: 100,
       child: OutlinedButton.icon(
@@ -35,7 +35,7 @@ class UserTypeButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           backgroundColor: isSelected ? Colors.orange : Colors.transparent,
         ),
       ),

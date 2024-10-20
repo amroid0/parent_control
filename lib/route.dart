@@ -15,7 +15,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
   switch (settings.name) {
     case SplashScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) => SplashScreen(),
+        builder: (context) => const SplashScreen(),
       );
     case ParentHomeScreen.routeName:
       return MaterialPageRoute(
@@ -49,7 +49,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
     case UserTypeSelectionScreen.routeName:
       return MaterialPageRoute(
-        builder: (context) => UserTypeSelectionScreen(),
+        builder: (context) => const UserTypeSelectionScreen(),
       );
     case ChildTokenScreen.routeName:
       final args = settings.arguments as Map<String, String>;

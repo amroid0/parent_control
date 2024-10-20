@@ -10,10 +10,10 @@ class SafeZoneScreen extends StatefulWidget {
   final LatLng initialLocation;
 
   const SafeZoneScreen({
-    Key? key,
+    super.key,
     required this.childId,
     required this.initialLocation,
-  }) : super(key: key);
+  });
 
   @override
   _SafeZoneScreenState createState() => _SafeZoneScreenState();
@@ -110,7 +110,7 @@ class _SafeZoneScreenState extends State<SafeZoneScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AlertSettingsScreen(),
+                            builder: (context) => const AlertSettingsScreen(),
                           ),
                         );
                       },

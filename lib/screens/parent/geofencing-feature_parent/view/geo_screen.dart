@@ -10,10 +10,10 @@ class GeofencingScreen extends StatelessWidget {
   final double safeZoneRadius;
 
   const GeofencingScreen({
-    Key? key,
+    super.key,
     required this.safeZoneCenter,
     required this.safeZoneRadius,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class GeofencingScreen extends StatelessWidget {
           safeZoneCenter: safeZoneCenter,
           safeZoneRadius: safeZoneRadius,
         ),
-        child: GeofencingView(),
+        child: const GeofencingView(),
       ),
     );
   }
@@ -40,7 +40,7 @@ class GeofencingView extends StatelessWidget {
     return BlocBuilder<GeofencingCubit, GeofencingState>(
       builder: (context, state) {
         if (state is GeofencingLoading) {
-          return const Center(child: const CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (state is GeofencingInsideZone) {
           return const Center(child: Text('الطفل داخل المنطقة الآمنة'));
         } else if (state is GeofencingOutsideZone) {
