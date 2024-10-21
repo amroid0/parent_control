@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'children_list.dart';
+import '../children_list_view.dart';
 import '../../widgets/loading.dart';
 import '../home_parent_cubit.dart';
 

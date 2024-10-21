@@ -1,61 +1,61 @@
-// GeofenceChildCubit
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter/material.dart';
-import 'geo_state.dart';
+import 'dart:async';
 
-class GeofenceChildCubit extends Cubit<GeofenceChildState> {
-  double? childLatitude;
-  double? childLongitude;
+import 'package:parent_control/screens/child/geofencing-feature-child/cubit/geo_state.dart';
 
-  GeofenceChildCubit() : super(GeofenceChildInitial());
+class LocationCubit extends Cubit<LocationState> {
+  Timer? _timer;
+  final GeolocatorPlatform _geolocator = GeolocatorPlatform.instance;
 
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+  LocationCubit() : super(LocationInitial());
 
-    // Check if location services are enabled
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      throw Exception('Location services are disabled.');
-    }
-
-    // Check location permissions
-    permission = await Geolocator.checkPermission();
+  // التحقق من أذونات الموقع
+  Future<void> checkLocationPermission() async {
+    final permission = await _geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        throw Exception('Location permissions are denied.');
+      final permissionRequested = await _geolocator.requestPermission();
+      if (permissionRequested == LocationPermission.denied) {
+        emit(LocationPermissionDenied());
+        return;
       }
     }
-
-    if (permission == LocationPermission.deniedForever) {
-      throw Exception(
-          'Location permissions are permanently denied, cannot request permissions.');
-    }
-
-    // Get current position with high accuracy
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    emit(LocationPermissionGranted());
   }
 
-  Future<void> getCurrentLocation(BuildContext context) async {
-    emit(GeofenceChildLoading());
+  // تحديث الموقع كل 30 ثانية
+  void startUpdatingLocation() {
+    _timer?.cancel(); // لو فيه تايمر قديم نلغيه
+    _timer = Timer.periodic(Duration(seconds: 30), (timer) async {
+      final position = await _geolocator.getCurrentPosition();
+      emit(LocationUpdated(position));
+    });
+  }
 
-    try {
-      Position position = await _determinePosition();
-      childLatitude = position.latitude;
-      childLongitude = position.longitude;
-
-      if (childLatitude != null && childLongitude != null) {}
-
-      emit(GeofenceChildLoaded(
-        latitude: childLatitude!,
-        longitude: childLongitude!,
-      ));
-    } catch (e) {
-      emit(GeofenceFailure(error: e.toString()));
+  // التحقق من الـ Safe Zone
+  void checkIfInSafeZone(Position position, Position safeZonePosition, double radius) {
+    final distance = Geolocator.distanceBetween(
+      position.latitude,
+      position.longitude,
+      safeZonePosition.latitude,
+      safeZonePosition.longitude,
+    );
+    
+    if (distance <= radius) {
+      emit(InsideSafeZone());
+    } else {
+      emit(OutsideSafeZone());
     }
+  }
+
+  // وقف التحديث
+  void stopUpdatingLocation() {
+    _timer?.cancel();
+  }
+
+  @override
+  Future<void> close() {
+    stopUpdatingLocation();
+    return super.close();
   }
 }

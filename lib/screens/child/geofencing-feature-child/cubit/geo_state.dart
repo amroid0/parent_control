@@ -1,20 +1,18 @@
-// GeofenceChildState
+import 'package:geolocator/geolocator.dart';
 
-abstract class GeofenceChildState {}
+abstract class LocationState {}
 
-class GeofenceChildInitial extends GeofenceChildState {}
+class LocationInitial extends LocationState {}
 
-class GeofenceChildLoading extends GeofenceChildState {}
+class LocationPermissionGranted extends LocationState {}
 
-class GeofenceChildLoaded extends GeofenceChildState {
-  final double latitude;
-  final double longitude;
-  GeofenceChildLoaded({required this.latitude, required this.longitude});
+class LocationPermissionDenied extends LocationState {}
+
+class LocationUpdated extends LocationState {
+  final Position position;
+  LocationUpdated(this.position);
 }
 
-class GeofenceFailure extends GeofenceChildState {
-  final String error;
-  GeofenceFailure({required this.error});
-}
+class InsideSafeZone extends LocationState {}
 
-
+class OutsideSafeZone extends LocationState {}

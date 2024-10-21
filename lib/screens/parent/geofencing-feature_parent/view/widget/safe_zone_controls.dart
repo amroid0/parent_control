@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../widgets/custom_icon_button.dart';
 
 class SafeZoneControls extends StatelessWidget {
@@ -10,13 +9,13 @@ class SafeZoneControls extends StatelessWidget {
   final VoidCallback onSettings;
 
   const SafeZoneControls({
-    Key? key,
+    super.key,
     required this.safeZoneRadius,
     required this.onRadiusChanged,
     required this.onSave,
     required this.onGeofencingStart,
     required this.onSettings,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

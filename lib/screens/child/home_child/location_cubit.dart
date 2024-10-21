@@ -38,8 +38,11 @@ class LocationCubit extends Cubit<Position?> {
 
   Future<void> pushLocationToFirestore(Position position) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    await firestore.collection('children')
-        .doc(childId).collection('locations').add({
+    await firestore
+        .collection('children')
+        .doc(childId)
+        .collection('locations')
+        .add({
       'latitude': position.latitude,
       'longitude': position.longitude,
       'timestamp': FieldValue.serverTimestamp(),
@@ -51,7 +54,8 @@ class LocationCubit extends Cubit<Position?> {
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: 'location_service',
         channelName: 'Location Tracking Service',
-        channelDescription: 'This service is used for tracking the user\'s location.',
+        channelDescription:
+            'This service is used for tracking the user\'s location.',
       ),
       iosNotificationOptions: const IOSNotificationOptions(
         showNotification: true,
@@ -70,18 +74,20 @@ class LocationCubit extends Cubit<Position?> {
       callback: startCallback,
     );
   }
-
 }
+
 @pragma('vm:entry-point')
 void startCallback() {
   FlutterForegroundTask.setTaskHandler(LocationTaskHandler());
 }
+
 class LocationTaskHandler extends TaskHandler {
   LocationCubit? _locationCubit;
 
-
   @override
-  Future<void> onStart(DateTime timestamp,) async {
+  Future<void> onStart(
+    DateTime timestamp,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? childId = prefs.getString('childId');
     _locationCubit = LocationCubit(childId!);
@@ -89,16 +95,19 @@ class LocationTaskHandler extends TaskHandler {
   }
 
   @override
-  void onEvent(DateTime timestamp,) {
+  void onEvent(
+    DateTime timestamp,
+  ) {
     // Handle events if needed
   }
 
   @override
-  void onDestroy(DateTime timestamp,) {
+  void onDestroy(
+    DateTime timestamp,
+  ) {
     _locationCubit?.close();
   }
 
   @override
-  void onRepeatEvent(DateTime timestamp) {
-  }
+  void onRepeatEvent(DateTime timestamp) {}
 }

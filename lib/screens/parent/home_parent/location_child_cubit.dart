@@ -126,4 +126,22 @@ class ChildLocationsCubit extends Cubit<ChildLocationsState> {
     });
     return super.close();
   }
+
+  Map<String, GeoPoint> toMap(Iterable<MapEntry<String, GeoPoint>> entries) {
+    return {for (var entry in entries) entry.key: entry.value};
+  }
+
+  void searchChildByName(String query) {
+    if (state is ChildLocationsLoaded) {
+      final loadedState = state as ChildLocationsLoaded;
+      final filteredLocations = loadedState.locations.entries.where((entry) {
+        final childName = loadedState.childNames[entry.key] ?? '';
+        return childName.toLowerCase().contains(query.toLowerCase());
+      });
+
+      final filteredLocationsMap = toMap(filteredLocations);
+
+      emit(ChildLocationsLoaded(filteredLocationsMap, loadedState.childNames));
+    }
+  }
 }

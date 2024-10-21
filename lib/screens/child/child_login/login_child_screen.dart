@@ -31,30 +31,32 @@ class LoginChildScreen extends StatelessWidget {
           },
           builder: (context, state) {
             return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        const SizedBox(height: 20),
-                        Image.asset(
-                          Assets.imagesLogo,
-                          height: 150,
-                        ),
-                        const SizedBox(height: 40),
-                        _buildTextField(_emailController, 'Email'),
-                        const SizedBox(height: 20),
-                        _buildTextField(_tokenController, 'Token'),
-                        const SizedBox(height: 40),
-                        _buildLoginButton(context, state),
-                      ],
-                    ),
-                    const Column(
-                      children: [],
-                    ),
-                  ],
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          Image.asset(
+                            Assets.imagesLogo,
+                            height: 150,
+                          ),
+                          const SizedBox(height: 40),
+                          _buildTextField(_emailController, 'Email'),
+                          const SizedBox(height: 20),
+                          _buildTextField(_tokenController, 'Token'),
+                          const SizedBox(height: 40),
+                          _buildLoginButton(context, state),
+                        ],
+                      ),
+                      const Column(
+                        children: [],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
